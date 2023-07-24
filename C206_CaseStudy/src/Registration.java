@@ -1,4 +1,5 @@
 import java.util.Date;
+
 public class Registration {
     private static int nextId = 1;
 
@@ -14,6 +15,7 @@ public class Registration {
         this.activity = activity;
         this.status = status;
     }
+
     public Registration(Users user, Activity activity, Date date) {
         this.user = user;
         this.activity = activity;
@@ -48,11 +50,15 @@ public class Registration {
         this.status = status;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
     @Override
     public String toString() {
         return "Registration ID: " + registrationId +
-               ", User: " + user.getName() +
-               ", Activity: " + activity.getActivityName() +
-               ", Status: " + status;
+                ", User: " + user.getName() +
+                ", Activity: " + activity.getActivityName() +
+                ", Status: " + status;
     }
 }

@@ -434,7 +434,7 @@ public class C206_CaseStudy {
 		}
 
 		// Remove the registration from the list and inform the user
-		Registration deletedRegistration = registrationList.remove(registrationIdToDelete - 1);
+		registrationList.remove(registrationIdToDelete - 1);
 		System.out.println("Registration with ID " + registrationIdToDelete + " has been deleted.");
 	}
 
@@ -626,7 +626,7 @@ public class C206_CaseStudy {
 		}
 
 		// Remove the time slot from the list and inform the user
-		TimeSlot deletedTimeSlot = timeSlotList.remove(timeSlotIdToDelete - 1);
+		timeSlotList.remove(timeSlotIdToDelete - 1);
 		System.out.println("Time slot with ID " + timeSlotIdToDelete + " has been deleted.");
 	}
 
@@ -641,10 +641,4 @@ public class C206_CaseStudy {
 	private static void deleteAttendance() {
 		// Implement code to delete an existing attendance from the attendanceList
 	}
-
-	public static String viewUsersForTesting() {
-		return null;
-	}
-
-	// Helper methods and classes here...
 }

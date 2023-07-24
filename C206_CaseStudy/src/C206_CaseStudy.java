@@ -3,25 +3,47 @@ import java.util.Date;
 
 public class C206_CaseStudy {
 
-	private static final int OPTION_ADD_USER = 1;
-	private static final int OPTION_VIEW_USERS = 2;
-	private static final int OPTION_DELETE_USER = 3;
-	private static final int OPTION_ADD_ACTIVITY = 4;
-	private static final int OPTION_VIEW_ACTIVITIES = 5;
-	private static final int OPTION_DELETE_ACTIVITY = 6;
-	private static final int OPTION_ADD_REGISTRATION = 7;
-	private static final int OPTION_VIEW_REGISTRATIONS = 8;
-	private static final int OPTION_DELETE_REGISTRATION = 9;
-	private static final int OPTION_ADD_APPROVAL_STATUS = 10;
-	private static final int OPTION_VIEW_APPROVAL_STATUSES = 11;
-	private static final int OPTION_DELETE_APPROVAL_STATUS = 12;
-	private static final int OPTION_ADD_TIME_SLOT = 13;
-	private static final int OPTION_VIEW_TIME_SLOTS = 14;
-	private static final int OPTION_DELETE_TIME_SLOT = 15;
-	private static final int OPTION_ADD_ATTENDANCE = 16;
-	private static final int OPTION_VIEW_ATTENDANCE = 17;
-	private static final int OPTION_DELETE_ATTENDANCE = 18;
-	private static final int OPTION_QUIT = 19;
+    private enum Option {
+        ADD_USER(1),
+        VIEW_USERS(2),
+        DELETE_USER(3),
+        ADD_ACTIVITY(4),
+        VIEW_ACTIVITIES(5),
+        DELETE_ACTIVITY(6),
+        ADD_REGISTRATION(7),
+        VIEW_REGISTRATIONS(8),
+        DELETE_REGISTRATION(9),
+        ADD_APPROVAL_STATUS(10),
+        VIEW_APPROVAL_STATUSES(11),
+        DELETE_APPROVAL_STATUS(12),
+        ADD_TIME_SLOT(13),
+        VIEW_TIME_SLOTS(14),
+        DELETE_TIME_SLOT(15),
+        ADD_ATTENDANCE(16),
+        VIEW_ATTENDANCE(17),
+        DELETE_ATTENDANCE(18),
+        QUIT(19);
+
+        private final int value;
+
+        Option(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public static Option fromValue(int value) {
+            for (Option option : Option.values()) {
+                if (option.getValue() == value) {
+                    return option;
+                }
+            }
+            throw new IllegalArgumentException("Invalid option value: " + value);
+        }
+    }
+
 
 	private static ArrayList<Users> userList = new ArrayList<>();
 	private static ArrayList<Activity> activityList = new ArrayList<>();
@@ -46,80 +68,85 @@ public class C206_CaseStudy {
 
 		int option = 0;
 
-		while (option != OPTION_QUIT) {
+	    while (option != Option.QUIT.getValue()) {
 			menu();
 			option = Helper.readInt("Enter an option > ");
-
-			switch (option) {
-				case OPTION_ADD_USER:
-					addUser();
-					break;
-				case OPTION_VIEW_USERS:
-					viewUsers();
-					break;
-				case OPTION_DELETE_USER:
-					deleteUser();
-					break;
-				case OPTION_ADD_ACTIVITY:
-					addActivity();
-					break;
-				case OPTION_VIEW_ACTIVITIES:
-					viewActivities();
-					break;
-				case OPTION_DELETE_ACTIVITY:
-					deleteActivity();
-					break;
-				case OPTION_ADD_REGISTRATION:
-					addRegistration();
-					break;
-				case OPTION_VIEW_REGISTRATIONS:
-					viewRegistrations();
-					break;
-				case OPTION_DELETE_REGISTRATION:
-					deleteRegistration();
-					break;
-				case OPTION_ADD_APPROVAL_STATUS:
-					addApprovalStatus();
-					break;
-				case OPTION_VIEW_APPROVAL_STATUSES:
-					viewApprovalStatuses();
-					break;
-				case OPTION_DELETE_APPROVAL_STATUS:
-					deleteApprovalStatus();
-					break;
-				case OPTION_ADD_TIME_SLOT:
-					addTimeSlot();
-					break;
-				case OPTION_VIEW_TIME_SLOTS:
-					viewTimeSlots();
-					break;
-				case OPTION_DELETE_TIME_SLOT:
-					deleteTimeSlot();
-					break;
-				case OPTION_ADD_ATTENDANCE:
-					addAttendance();
-					break;
-				case OPTION_VIEW_ATTENDANCE:
-					viewAttendance();
-					break;
-				case OPTION_DELETE_ATTENDANCE:
-					deleteAttendance();
-					break;
-				case OPTION_QUIT:
-					System.out.println("Bye!");
-					break;
-				default:
-					System.out.println("Invalid option");
-					break;
+	
+			try {
+				Option selectedOption = Option.fromValue(option);
+				switch (selectedOption) {
+					case ADD_USER:
+						addUser();
+						break;
+					case VIEW_USERS:
+						viewUsers();
+						break;
+					case DELETE_USER:
+						deleteUser();
+						break;
+					case ADD_ACTIVITY:
+						addActivity();
+						break;
+					case VIEW_ACTIVITIES:
+						viewActivities();
+						break;
+					case DELETE_ACTIVITY:
+						deleteActivity();
+						break;
+					case ADD_REGISTRATION:
+						addRegistration();
+						break;
+					case VIEW_REGISTRATIONS:
+						viewRegistrations();
+						break;
+					case DELETE_REGISTRATION:
+						deleteRegistration();
+						break;
+					case ADD_APPROVAL_STATUS:
+						addApprovalStatus();
+						break;
+					case VIEW_APPROVAL_STATUSES:
+						viewApprovalStatuses();
+						break;
+					case DELETE_APPROVAL_STATUS:
+						deleteApprovalStatus();
+						break;
+					case ADD_TIME_SLOT:
+						addTimeSlot();
+						break;
+					case VIEW_TIME_SLOTS:
+						viewTimeSlots();
+						break;
+					case DELETE_TIME_SLOT:
+						deleteTimeSlot();
+						break;
+					case ADD_ATTENDANCE:
+						addAttendance();
+						break;
+					case VIEW_ATTENDANCE:
+						viewAttendance();
+						break;
+					case DELETE_ATTENDANCE:
+						deleteAttendance();
+						break;
+					case QUIT:
+						System.out.println("Bye!");
+						break;
+					default:
+						System.out.println("Invalid option");
+						break;
+				}
+			} catch (IllegalArgumentException e) {
+				System.out.println("Invalid option. Please enter a valid option number.");
 			}
 		}
 	}
 
 	private static void menu() {
 
-		System.out.println("------------------------");
+		System.out.println("-".repeat(24));
 		System.out.println("Menu Options");
-		System.out.println("------------------------");
+		System.out.println("-".repeat(24));
 		System.out.println("1. Add a new user");
 		System.out.println("2. View all users");
 		System.out.println("3. Delete an existing user");
@@ -143,64 +170,71 @@ public class C206_CaseStudy {
 
 	private static void addUser() {
 		System.out.println("ADD NEW USER");
-		String name = Helper.readString("Enter user's name: ");
-		String userId = Helper.readString("Enter user's ID: ");
+		String name = Helper.readString("Enter username: ");
+		String userId = Helper.readString("Enter userID: ");
 
 		// Check if the student ID is already taken
+		boolean check = true;
 		for (Users user : userList) {
 			if (user.getStudentId().equalsIgnoreCase(userId)) {
 				System.out.println("Error: Student ID is already taken. Please enter a different ID.");
-				return;
+				check = false;
+				break;
 			}
 		}
 
-		// Create a new User object
-		Users newUser = new Users(name, userId);
+		if(check){
+			Users newUser = new Users(name, userId);
+			userList.add(newUser);
 
-		// Add the new user to the userList
-		userList.add(newUser);
-
-		System.out.println("User added successfully.");
+			System.out.println("User added successfully.");
+		}
+		
 	}
 
 	private static void viewUsers() {
-		System.out.println("--------------------------------------------------------------------------------");
+		System.out.println("-".repeat(80));
 		System.out.println("USERS LIST");
-		System.out.println("--------------------------------------------------------------------------------");
+		System.out.println("-".repeat(80));
 		if (userList.isEmpty()) {
 			System.out.println("No users found.");
-			System.out.println("--------------------------------------------------------------------------------");
+			System.out.println("-".repeat(80));
 		} else {
 			System.out.printf("%-20s %-20s\n", "NAME", "STUDENT ID");
 			for (Users user : userList) {
 				System.out.printf("%-20s %-20s\n", user.getName(), user.getStudentId());
 			}
-			System.out.println("--------------------------------------------------------------------------------");
+			System.out.println("-".repeat(80));
 		}
 	}
 
 	private static void deleteUser() {
 		viewUsers();
-		String studentIdToDelete = Helper.readString("Enter the student ID of the user to delete: ");
-		Users userToDelete = null;
+		System.out.println("DELETE USER");
+		String studentIdToDelete = Helper.readString("\nEnter student ID: ");
+
+		boolean executeDelete =  false;
+
 		for (Users user : userList) {
 			if (user.getStudentId().equalsIgnoreCase(studentIdToDelete)) {
-				userToDelete = user;
+				executeDelete = true;
+			}
+			if(executeDelete){
+				userList.remove(user);
+				System.out.println("User deleted successfully!");
 				break;
 			}
 		}
-		if (userToDelete != null) {
-			userList.remove(userToDelete);
-			System.out.println("User deleted successfully!");
-		} else {
+
+		if (!executeDelete){
 			System.out.println("User with the given student ID not found.");
 		}
 	}
 
 	private static void addActivity() {
-		System.out.println("------------------------");
-		System.out.println("Add New Activity");
-		System.out.println("------------------------");
+		System.out.println("-".repeat(25));
+		System.out.println("ADD NEW ACTIVITY ");
+		System.out.println("-".repeat(25));
 
 		// Gather information from the user
 		String name = Helper.readString("Enter activity name: ");
@@ -217,63 +251,65 @@ public class C206_CaseStudy {
 	}
 
 	private static void viewActivities() {
-		System.out.println("------------------------");
+		System.out.println("-".repeat(24));
 		System.out.println("View All Activities");
-		System.out.println("------------------------");
+		System.out.println("-".repeat(24));
 
 		if (activityList.isEmpty()) {
 			System.out.println("No activities found.");
-		} else {
-			System.out.println(
-					String.format("%-5s %-15s %-10s %-30s", "ID", "Activity Name", "Capacity", "Prerequisites"));
-			System.out.println("---------------------------------------------------");
+		} 
+		
+		if(!activityList.isEmpty()) {
+			String ColumnTitles = String.format("%-5s %-15s %-10s %-30s", "ID", "Activity Name", "Capacity", "Prerequisites");
+			System.out.println(ColumnTitles);
+
+			System.out.println("-".repeat(51));
+
 			for (Activity activity : activityList) {
-				System.out.println(String.format("%-5s %-15s %-10s %-30s", activity.getActivityId(),
-						activity.getActivityName(), activity.getCapacity(), activity.getPrerequisites()));
+				String rowDetails = String.format("%-5s %-15s %-10s %-30s", activity.getActivityId(),activity.getActivityName(), 
+																				   activity.getCapacity(), activity.getPrerequisites());
+				System.out.println(rowDetails);
 			}
 		}
 	}
 
 	private static void deleteActivity() {
-		System.out.println("------------------------");
-		System.out.println("Delete Activity");
-		System.out.println("------------------------");
+		System.out.println("-".repeat(24));
+		System.out.println("DELETE ACTIVITY");
+		System.out.println("-".repeat(24));
 
-		// Check if there are any activities to delete
 		if (activityList.isEmpty()) {
 			System.out.println("No activities found.");
-			return;
 		}
 
-		// Display all activities with their IDs
 		System.out.println("All Activities:");
-		System.out.println(String.format("%-5s %-30s", "ID", "Name"));
-		System.out.println("---------------------------");
+		String columnTitles = String.format("%-5s %-30s", "ID", "Name");
+		System.out.println(columnTitles);
+
+		System.out.println("-".repeat(27));
+
 		for (Activity activity : activityList) {
-			System.out.println(String.format("%-5s %-30s", activity.getActivityId(), activity.getActivityName()));
+			String rowDetails = String.format("%-5s %-30s", activity.getActivityId(), activity.getActivityName());
+			System.out.println(rowDetails);
 		}
 
-		// Prompt the user to enter the ID of the activity they want to delete
-		int activityIdToDelete = Helper.readInt("Enter the ID of the activity to delete: ");
+		int activityIdToDelete = Helper.readInt("Delete activity(ID): ");
 
-		// Find the activity with the entered activityId
-		Activity deletedActivity = null;
+		boolean executeDelete = false;
+
 		for (Activity activity : activityList) {
 			if (activity.getActivityId() == activityIdToDelete) {
-				deletedActivity = activity;
+				executeDelete = true;
+				activityList.remove(activity);
+				System.out.println("Activity with ID " + activityIdToDelete + " has been deleted.");
 				break;
 			}
 		}
 
-		// Check if the entered ID is valid
-		if (deletedActivity == null) {
+		if(!executeDelete){
 			System.out.println("Invalid activity ID.");
-			return;
 		}
 
-		// Remove the activity from the list and inform the user
-		activityList.remove(deletedActivity);
-		System.out.println("Activity with ID " + activityIdToDelete + " has been deleted.");
 	}
 
 	private static void addRegistration() {

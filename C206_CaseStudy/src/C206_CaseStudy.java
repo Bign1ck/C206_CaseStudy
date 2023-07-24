@@ -605,10 +605,4 @@ public class C206_CaseStudy {
 	private static void deleteAttendance() {
 		// Implement code to delete an existing attendance from the attendanceList
 	}
-
-	public static String viewUsersForTesting() {
-		return null;
-	}
-
-	// Helper methods and classes here...
 }

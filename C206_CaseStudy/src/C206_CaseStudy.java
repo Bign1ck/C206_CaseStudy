@@ -398,7 +398,7 @@ public class C206_CaseStudy {
 		}
 
 		// Remove the registration from the list and inform the user
-		Registration deletedRegistration = registrationList.remove(registrationIdToDelete - 1);
+		registrationList.remove(registrationIdToDelete - 1);
 		System.out.println("Registration with ID " + registrationIdToDelete + " has been deleted.");
 	}
 
@@ -590,7 +590,7 @@ public class C206_CaseStudy {
 		}
 
 		// Remove the time slot from the list and inform the user
-		TimeSlot deletedTimeSlot = timeSlotList.remove(timeSlotIdToDelete - 1);
+		timeSlotList.remove(timeSlotIdToDelete - 1);
 		System.out.println("Time slot with ID " + timeSlotIdToDelete + " has been deleted.");
 	}
 

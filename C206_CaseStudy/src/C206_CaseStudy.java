@@ -31,6 +31,19 @@ public class C206_CaseStudy {
 	private static ArrayList<Attendance> attendanceList = new ArrayList<>();
 
 	public static void main(String[] args) {
+
+		Users user1 = new Users("John Doe", "123456");
+		userList.add(user1);
+
+		Users user2 = new Users("Jane Smith", "789012");
+		userList.add(user2);
+
+		Activity activity1 = new Activity("Swimming", 20, "Swimming goggles");
+		activityList.add(activity1);
+
+		Activity activity2 = new Activity("Yoga", 15, "Yoga mat");
+		activityList.add(activity2);
+
 		int option = 0;
 
 		while (option != OPTION_QUIT) {
@@ -428,13 +441,13 @@ public class C206_CaseStudy {
 		System.out.println("------------------------");
 		System.out.println("Delete Approval Status");
 		System.out.println("------------------------");
-	
+
 		// Check if there are any approval statuses to delete
 		if (approvalStatusList.isEmpty()) {
 			System.out.println("No approval statuses found.");
 			return;
 		}
-	
+
 		// Display all approval statuses with their IDs
 		System.out.println("All Approval Statuses:");
 		System.out.println(String.format("%-5s %-10s", "ID", "Status"));
@@ -443,31 +456,142 @@ public class C206_CaseStudy {
 			ApprovalStatus status = approvalStatusList.get(i);
 			System.out.println(String.format("%-5s %-10s", (i + 1), status.getStatus()));
 		}
-	
+
 		// Prompt the user to enter the ID of the approval status they want to delete
 		int approvalStatusIdToDelete = Helper.readInt("Enter the ID of the approval status to delete: ");
-	
+
 		// Check if the entered ID is valid
 		if (approvalStatusIdToDelete <= 0 || approvalStatusIdToDelete > approvalStatusList.size()) {
 			System.out.println("Invalid approval status ID.");
 			return;
 		}
-	
+
 		// Remove the approval status from the list and inform the user
 		ApprovalStatus deletedStatus = approvalStatusList.remove(approvalStatusIdToDelete - 1);
-		System.out.println("Approval status with ID " + approvalStatusIdToDelete + " has been deleted.");
+		System.out
+				.println("Approval status with ID " + approvalStatusIdToDelete + " has been deleted: " + deletedStatus);
+	}
+
+	private static Activity getActivityById(int activityId) {
+		for (Activity activity : activityList) {
+			if (activity.getActivityId() == activityId) {
+				return activity;
+			}
+		}
+		return null; // Return null if the activity with the specified ID is not found
 	}
 
 	private static void addTimeSlot() {
-		// Implement code to add a new time slot to the timeSlotList
+		System.out.println("------------------------");
+		System.out.println("Add New Time Slot");
+		System.out.println("------------------------");
+
+		// Gather information from the user
+		Date startTime = Helper.readDate("Enter start time (dd/MM/yyyy HH:mm): ");
+		Date endTime = Helper.readDate("Enter end time (dd/MM/yyyy HH:mm): ");
+
+		// Ensure that the end time is after the start time
+		if (endTime.before(startTime)) {
+			System.out.println("Error: End time cannot be before the start time. Time slot creation aborted.");
+			return;
+		}
+
+		viewActivities();
+		int activityId = Helper.readInt("Enter the ID of the activity for the time slot: ");
+		Activity selectedActivity = getActivityById(activityId);
+
+		if (selectedActivity == null) {
+			System.out.println("Error: Activity with the entered ID not found. Time slot creation aborted.");
+			return;
+		}
+
+		// Check if the time slot conflicts with existing time slots for the selected
+		// activity
+		if (hasTimeSlotConflict(startTime, endTime, selectedActivity)) {
+			System.out.println(
+					"Error: There is a time slot conflict with the selected activity. Time slot creation aborted.");
+			return;
+		}
+
+		// Create a new TimeSlot object
+		TimeSlot timeSlot = new TimeSlot(startTime, endTime, selectedActivity);
+
+		// Add the new time slot to the timeSlotList
+		timeSlotList.add(timeSlot);
+
+		System.out.println("Time slot added successfully!");
+	}
+
+	// Helper method to check if there is a time slot conflict with the selected
+	// activity
+	private static boolean hasTimeSlotConflict(Date startTime, Date endTime, Activity activity) {
+		for (TimeSlot existingTimeSlot : timeSlotList) {
+			if (existingTimeSlot.getActivity().equals(activity)) {
+				// Check if the new time slot's start or end time falls within the existing time
+				// slot
+				if ((startTime.after(existingTimeSlot.getStartTime())
+						&& startTime.before(existingTimeSlot.getEndTime()))
+						|| (endTime.after(existingTimeSlot.getStartTime())
+								&& endTime.before(existingTimeSlot.getEndTime()))) {
+					return true; // There is a time slot conflict
+				}
+			}
+		}
+		return false; // No time slot conflict
 	}
 
 	private static void viewTimeSlots() {
-		// Implement code to view all time slots in the timeSlotList
+		System.out.println("------------------------");
+		System.out.println("View All Time Slots");
+		System.out.println("------------------------");
+
+		if (timeSlotList.isEmpty()) {
+			System.out.println("No time slots found.");
+		} else {
+			System.out.println("Time Slots:");
+			System.out.println(String.format("%-5s %-15s %-10s", "ID", "Day", "Time"));
+			System.out.println("---------------------------");
+			for (int i = 0; i < timeSlotList.size(); i++) {
+				TimeSlot timeSlot = timeSlotList.get(i);
+				System.out.println(String.format("%-5s %-15s %-10s", (i + 1), timeSlot.getDay(),
+						timeSlot.getStartTime() + " - " + timeSlot.getEndTime()));
+			}
+		}
 	}
 
 	private static void deleteTimeSlot() {
-		// Implement code to delete an existing time slot from the timeSlotList
+		System.out.println("------------------------");
+		System.out.println("Delete Time Slot");
+		System.out.println("------------------------");
+
+		// Check if there are any time slots to delete
+		if (timeSlotList.isEmpty()) {
+			System.out.println("No time slots found.");
+			return;
+		}
+
+		// Display all time slots with their IDs
+		System.out.println("All Time Slots:");
+		System.out.println(String.format("%-5s %-15s %-10s", "ID", "Day", "Time"));
+		System.out.println("---------------------------");
+		for (int i = 0; i < timeSlotList.size(); i++) {
+			TimeSlot timeSlot = timeSlotList.get(i);
+			System.out.println(String.format("%-5s %-15s %-10s", (i + 1), timeSlot.getDay(),
+					timeSlot.getStartTime() + " - " + timeSlot.getEndTime()));
+		}
+
+		// Prompt the user to enter the ID of the time slot they want to delete
+		int timeSlotIdToDelete = Helper.readInt("Enter the ID of the time slot to delete: ");
+
+		// Check if the entered ID is valid
+		if (timeSlotIdToDelete <= 0 || timeSlotIdToDelete > timeSlotList.size()) {
+			System.out.println("Invalid time slot ID.");
+			return;
+		}
+
+		// Remove the time slot from the list and inform the user
+		TimeSlot deletedTimeSlot = timeSlotList.remove(timeSlotIdToDelete - 1);
+		System.out.println("Time slot with ID " + timeSlotIdToDelete + " has been deleted.");
 	}
 
 	private static void addAttendance() {
@@ -480,6 +604,10 @@ public class C206_CaseStudy {
 
 	private static void deleteAttendance() {
 		// Implement code to delete an existing attendance from the attendanceList
+	}
+
+	public static String viewUsersForTesting() {
+		return null;
 	}
 
 	// Helper methods and classes here...

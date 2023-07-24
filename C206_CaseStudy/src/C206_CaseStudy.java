@@ -103,26 +103,25 @@ public class C206_CaseStudy {
 
 	private static void menu() {
 
-		System.out.println("1. Add a new user");
-		System.out.println("2. View all users");
-		System.out.println("3. Delete an existing user");
-		System.out.println("4. Add a new activity");
-		System.out.println("5. View all activities");
-		System.out.println("6. Delete an existing activity");
-		System.out.println("7. Add a new registration");
-		System.out.println("8. View all registrations");
-		System.out.println("9. Delete an existing registration");
-		System.out.println("10. Add a new approval status");
-		System.out.println("11. View all approval statuses");
-		System.out.println("12. Delete an existing approval status");
-		System.out.println("13. Add a new time slot");
-		System.out.println("14. View all time slots");
-		System.out.println("15. Delete an existing time slot");
-		System.out.println("16. Add a new attendance");
-		System.out.println("17. View all attendance");
-		System.out.println("18. Delete an existing attendance");
-		System.out.println("19. Quit");
-		Helper.line(80, "-");
+		System.out.println("------------------------");
+		System.out.println("Menu Options");
+		System.out.println("------------------------");
+		System.out.println("1. Add a new activity");
+		System.out.println("2. View all activities");
+		System.out.println("3. Delete an existing activity");
+		System.out.println("4. Add a new registration");
+		System.out.println("5. View all registrations");
+		System.out.println("6. Delete an existing registration");
+		System.out.println("7. Add a new approval status");
+		System.out.println("8. View all approval statuses");
+		System.out.println("9. Delete an existing approval status");
+		System.out.println("10. Add a new time slot");
+		System.out.println("11. View all time slots");
+		System.out.println("12. Delete an existing time slot");
+		System.out.println("13. Add a new attendance");
+		System.out.println("14. View all attendance");
+		System.out.println("15. Delete an existing attendance");
+		System.out.println("16. Quit");
 	}
 
 	private static void addUser() {
@@ -203,8 +202,8 @@ public class C206_CaseStudy {
 			System.out.println(String.format("%-15s %-10s %-30s", "Activity Name", "Capacity", "Name"));
 			System.out.println("---------------------------------------------------");
 			for (Activity activity : activityList) {
-				System.out.println(String.format("%-15s %-10s %-30s", activity.getActivityName(), activity.getCapacity(),
-						activity.getActivityName()));
+				System.out.println(String.format("%-15s %-10s %-30s", activity.getActivityName(),
+						activity.getCapacity(), activity.getActivityName()));
 			}
 		}
 	}

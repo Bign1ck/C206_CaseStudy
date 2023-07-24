@@ -218,8 +218,6 @@ public class C206_CaseStudy {
 		for (Users user : userList) {
 			if (user.getStudentId().equalsIgnoreCase(studentIdToDelete)) {
 				executeDelete = true;
-			}
-			if(executeDelete){
 				userList.remove(user);
 				System.out.println("User deleted successfully!");
 				break;

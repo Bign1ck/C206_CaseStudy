@@ -1,9 +1,12 @@
 public class Activity {
+    private static int nextActivityId = 1;
     private String activityName;
     private int capacity;
     private String prerequisites;
+    private int activityId;
 
     public Activity(String activityName, int capacity, String prerequisites) {
+        this.activityId = nextActivityId++;
         this.activityName = activityName;
         this.capacity = capacity;
         this.prerequisites = prerequisites;
@@ -17,7 +20,9 @@ public class Activity {
     public String getActivityName() {
         return activityName;
     }
-
+    public int getActivityId() {
+        return activityId;
+    }
     public void setActivityName(String activityName) {
         this.activityName = activityName;
     }

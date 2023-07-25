@@ -1,3 +1,4 @@
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TimeSlot {
@@ -13,6 +14,11 @@ public class TimeSlot {
         this.startTime = startTime;
         this.endTime = endTime;
         this.activity = activity;
+    }
+
+    public String getDay() {
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+        return sdf.format(startTime);
     }
 
     public int getTimeSlotId() {
@@ -38,8 +44,8 @@ public class TimeSlot {
     @Override
     public String toString() {
         return "Time Slot ID: " + timeSlotId +
-               ", Start Time: " + startTime +
-               ", End Time: " + endTime +
-               ", Activity: " + activity.getActivityName();
+                ", Start Time: " + startTime +
+                ", End Time: " + endTime +
+                ", Activity: " + activity.getActivityName();
     }
 }

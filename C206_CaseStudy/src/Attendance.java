@@ -16,6 +16,7 @@ public class Attendance {
         this.checkInTime = checkInTime;
     }
 
+
     public int getAttendanceId() {
         return attendanceId;
     }

@@ -20,6 +20,12 @@ public class C206_CaseStudyTest {
 		activityList = new ArrayList<>();
 		registrationList = new ArrayList<>();
 		approvalStatusList = new ArrayList<>();
+
+		Users user1 = new Users("John Doe", "123456");
+        userList.add(user1);
+
+        Users user2 = new Users("Jane Smith", "789012");
+        userList.add(user2);
 	}
 
 	@After
@@ -33,18 +39,71 @@ public class C206_CaseStudyTest {
 
 	@Test
 	public void testAddUser() {
+		String userID = "123456";
+		String userName = "Jim";
+
+		boolean Check_If_ID_Is_In_Database = false;
+		boolean CheckIfSuccessfullyAdded = false;
+		
+		for (Users user : userList) {
+			Check_If_ID_Is_In_Database = user.getStudentId().equalsIgnoreCase(userID);
+			if(Check_If_ID_Is_In_Database){
+				assertTrue(Check_If_ID_Is_In_Database);
+				break;
+			}
+		}
+
+		userID = "654321";
+		userName = "Jim";
+
+		if(!Check_If_ID_Is_In_Database){
+			Users newUser = new Users(userName, userID);
+			userList.add(newUser);
+			
+
+			for(Users user : userList){
+				CheckIfSuccessfullyAdded = user.getStudentId().equalsIgnoreCase(userID)
+										   &&user.getName().equalsIgnoreCase(userName);
+				assertTrue(CheckIfSuccessfullyAdded);
+			}
+		}
+
+
+		
+		
 		
 	}
 
 	@Test
 	public void testViewUsersEmpty() {
-		
+		userList.clear();
+		boolean userListIsEmpty = false;
+
+		if(userList.isEmpty()){
+			userListIsEmpty= true;
+		}
+
+		assertEquals(true, userListIsEmpty);
+
 	}
 
 	@Test
 	public void testViewUsersNonEmpty() {
-		// Test viewUsers() method when userList is not empty
-		// Implement the test for viewUsers() method when userList is not empty here
+				
+		boolean userListIsEmpty = true;
+
+		if(! userList.isEmpty()){
+			Users user1 = new Users("John Doe", "123456");
+			userList.add(user1);
+
+			Users user2 = new Users("Jane Smith", "789012");
+			userList.add(user2);
+
+			userListIsEmpty = false;
+		}
+
+		assertEquals(false, userListIsEmpty);
+
 	}
 
 	@Test

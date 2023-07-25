@@ -53,17 +53,39 @@ public class C206_CaseStudy {
 
 	public static void main(String[] args) {
 
-		Users user1 = new Users("John Doe", "123456");
-		userList.add(user1);
+		// Hardcoding user data
+		userList.add(new Users("John Doe", "123456"));
+		userList.add(new Users("Jane Smith", "789012"));
 
-		Users user2 = new Users("Jane Smith", "789012");
-		userList.add(user2);
+		// Hardcoding activity data
+		activityList.add(new Activity("Swimming", 20, "Swimming goggles"));
+		activityList.add(new Activity("Yoga", 15, "Yoga mat"));
 
-		Activity activity1 = new Activity("Swimming", 20, "Swimming goggles");
-		activityList.add(activity1);
+		// Hardcoding time slot data
+		TimeSlot timeSlot1 = new TimeSlot(new Date(), new Date(), activityList.get(0));
+		timeSlotList.add(timeSlot1);
 
-		Activity activity2 = new Activity("Yoga", 15, "Yoga mat");
-		activityList.add(activity2);
+		TimeSlot timeSlot2 = new TimeSlot(new Date(), new Date(), activityList.get(1));
+		timeSlotList.add(timeSlot2);
+
+		// Hardcoding registration data
+		Registration registration1 = new Registration(userList.get(0), activityList.get(0), "Pending");
+		registrationList.add(registration1);
+
+		Registration registration2 = new Registration(userList.get(1), activityList.get(1), "Approved");
+		registrationList.add(registration2);
+
+		// Hardcoding approval status data
+		approvalStatusList.add(new ApprovalStatus("Pending"));
+		approvalStatusList.add(new ApprovalStatus("Approved"));
+		approvalStatusList.add(new ApprovalStatus("Rejected"));
+
+		// Hardcoding attendance data
+		Attendance attendance1 = new Attendance(userList.get(0), timeSlotList.get(0), new Date());
+		attendanceList.add(attendance1);
+
+		Attendance attendance2 = new Attendance(userList.get(1), timeSlotList.get(1), new Date());
+		attendanceList.add(attendance2);
 
 		int option = 0;
 
@@ -650,48 +672,48 @@ public class C206_CaseStudy {
 
 	private static void addAttendance() {
 		System.out.println("------------------------");
-    System.out.println("Add New Attendance");
-    System.out.println("------------------------");
+		System.out.println("Add New Attendance");
+		System.out.println("------------------------");
 
-    // Get user details
-    viewUsers();
-    Integer userId = Helper.readInt("Enter the ID of the user: ");
-    Users selectedUser = getUserById(userId);
-    if (selectedUser == null) {
-        System.out.println("Error: User with the entered ID not found. Attendance creation aborted.");
-        return;
-    }
+		// Get user details
+		viewUsers();
+		Integer userId = Helper.readInt("Enter the ID of the user: ");
+		Users selectedUser = getUserById(userId);
+		if (selectedUser == null) {
+			System.out.println("Error: User with the entered ID not found. Attendance creation aborted.");
+			return;
+		}
 
-    // Check if there are any time slots available
-    if (timeSlotList.isEmpty()) {
-        System.out.println("Error: No time slots found. Attendance creation aborted.");
-        return;
-    }
+		// Check if there are any time slots available
+		if (timeSlotList.isEmpty()) {
+			System.out.println("Error: No time slots found. Attendance creation aborted.");
+			return;
+		}
 
-    // Get time slot details
-    viewTimeSlots();
-    int timeSlotId = Helper.readInt("Enter the ID of the time slot: ");
-    TimeSlot selectedTimeSlot = getTimeSlotById(timeSlotId);
-    if (selectedTimeSlot == null) {
-        System.out.println("Error: Time slot with the entered ID not found. Attendance creation aborted.");
-        return;
-    }
+		// Get time slot details
+		viewTimeSlots();
+		int timeSlotId = Helper.readInt("Enter the ID of the time slot: ");
+		TimeSlot selectedTimeSlot = getTimeSlotById(timeSlotId);
+		if (selectedTimeSlot == null) {
+			System.out.println("Error: Time slot with the entered ID not found. Attendance creation aborted.");
+			return;
+		}
 
-    // Get check-in time
-    Date checkInTime = Helper.readDate("Enter check-in time (dd/MM/yyyy HH:mm): ");
-    if (checkInTime == null) {
-        System.out.println("Error: Invalid check-in time format. Attendance creation aborted.");
-        return;
-    }
+		// Get check-in time
+		Date checkInTime = Helper.readDate("Enter check-in time (dd/MM/yyyy HH:mm): ");
+		if (checkInTime == null) {
+			System.out.println("Error: Invalid check-in time format. Attendance creation aborted.");
+			return;
+		}
 
-    // Create a new Attendance object
-    Attendance newAttendance = new Attendance(selectedUser, selectedTimeSlot, checkInTime);
+		// Create a new Attendance object
+		Attendance newAttendance = new Attendance(selectedUser, selectedTimeSlot, checkInTime);
 
-    // Add the new attendance record to the attendanceList
-    attendanceList.add(newAttendance);
+		// Add the new attendance record to the attendanceList
+		attendanceList.add(newAttendance);
 
-    System.out.println("Attendance added successfully!");
-}
+		System.out.println("Attendance added successfully!");
+	}
 
 	private static void viewAttendance() {
 		System.out.println("------------------------");
@@ -722,6 +744,37 @@ public class C206_CaseStudy {
 	}
 
 	private static void deleteAttendance() {
-		// Implement code to delete an existing attendance from the attendanceList
+		System.out.println("------------------------");
+		System.out.println("Delete Attendance");
+		System.out.println("------------------------");
+
+		// Check if there are any attendance records to delete
+		if (attendanceList.isEmpty()) {
+			System.out.println("No attendance records found.");
+			return;
+		}
+
+		// Display all attendance records with their IDs
+		System.out.println("All Attendance Records:");
+		System.out.println(String.format("%-5s %-20s %-15s", "ID", "User", "Time Slot"));
+		System.out.println("---------------------------------------");
+		for (int i = 0; i < attendanceList.size(); i++) {
+			Attendance attendance = attendanceList.get(i);
+			System.out.println(String.format("%-5s %-20s %-15s", (i + 1), attendance.getUser().getName(),
+					attendance.getTimeSlot().getTimeSlotId()));
+		}
+
+		// Prompt the user to enter the ID of the attendance record they want to delete
+		int attendanceIdToDelete = Helper.readInt("Enter the ID of the attendance record to delete: ");
+
+		// Check if the entered ID is valid
+		if (attendanceIdToDelete <= 0 || attendanceIdToDelete > attendanceList.size()) {
+			System.out.println("Invalid attendance record ID.");
+			return;
+		}
+
+		// Remove the attendance record from the list and inform the user
+		attendanceList.remove(attendanceIdToDelete - 1);
+		System.out.println("Attendance record with ID " + attendanceIdToDelete + " has been deleted.");
 	}
 }

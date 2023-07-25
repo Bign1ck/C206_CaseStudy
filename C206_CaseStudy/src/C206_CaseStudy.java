@@ -334,9 +334,9 @@ public class C206_CaseStudy {
 	}
 
 	private static void addRegistration() {
-		System.out.println("------------------------");
-		System.out.println("Add New Registration");
-		System.out.println("------------------------");
+		System.out.println("-".repeat(24));
+		System.out.println("ADD NEW REGISTRATION");
+		System.out.println("-".repeat(24));
 
 		if (userList.isEmpty() || activityList.isEmpty()) {
 			System.out.println("Error: No users or activities found. Please add users and activities first.");

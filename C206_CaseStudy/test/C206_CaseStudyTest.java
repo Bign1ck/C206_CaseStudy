@@ -82,33 +82,29 @@ public class C206_CaseStudyTest {
 
 	@Test
 	public void testViewUsersEmpty() {
+		//test when userList is empty
 		userList.clear();
-		boolean userListIsEmpty = false;
-
-		if(userList.isEmpty()){
-			userListIsEmpty= true;
-		}
-
-		assertEquals(true, userListIsEmpty);
+		boolean userListIsEmpty = userList.isEmpty();
+		assertTrue(userListIsEmpty);
 
 	}
 
 	@Test
 	public void testViewUsersNonEmpty() {
-				
-		boolean userListIsEmpty = true;
+		//test when userList is not empty
+		boolean userListIsEmpty = userList.isEmpty();
 
-		if(! userList.isEmpty()){
+		if(userListIsEmpty){
 			Users user1 = new Users("John Doe", "123456");
 			userList.add(user1);
 
 			Users user2 = new Users("Jane Smith", "789012");
 			userList.add(user2);
-
-			userListIsEmpty = false;
 		}
 
-		assertEquals(false, userListIsEmpty);
+		userListIsEmpty = userList.isEmpty();
+
+		assertFalse(userListIsEmpty);
 
 	}
 

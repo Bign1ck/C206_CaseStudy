@@ -85,7 +85,7 @@ public class C206_CaseStudyTest {
 		//test when userList is empty
 		userList.clear();
 		boolean userListIsEmpty = userList.isEmpty();
-		assertTrue(userListIsEmpty);
+		assertTrue("List is empty",userListIsEmpty);
 
 	}
 
@@ -104,14 +104,30 @@ public class C206_CaseStudyTest {
 
 		userListIsEmpty = userList.isEmpty();
 
-		assertFalse(userListIsEmpty);
+		assertFalse("user list is not empty",userListIsEmpty);
 
 	}
 
 	@Test
 	public void testDeleteUser() {
 		// Test deleteUser() method
+		String userID = "1234567";
+		boolean executeDelete = false;
+		boolean deleted = false;
+
 		// Implement the test for deleteUser() method here
+		for (Users user : userList) {
+			executeDelete = user.getStudentId().equalsIgnoreCase(userID);
+			if (executeDelete) {
+				userList.remove(user);
+				System.out.println("User deleted successfully!");
+				break;
+			}
+		}
+		for (Users user : userList) {
+			deleted = user.getStudentId().equalsIgnoreCase(userID);
+		}
+		assertFalse("user has been deleted", deleted);
 	}
 
 	@Test

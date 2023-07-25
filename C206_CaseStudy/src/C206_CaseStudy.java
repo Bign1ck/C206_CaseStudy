@@ -544,8 +544,8 @@ public class C206_CaseStudy {
 		System.out.println("------------------------");
 
 		// Gather information from the user
-		Date startTime = Helper.readDate("Enter start time (dd/MM/yyyy HH:mm): ");
-		Date endTime = Helper.readDate("Enter end time (dd/MM/yyyy HH:mm): ");
+		Date startTime = Helper.readDateTime("Enter start time (dd/MM/yyyy HH:mm): ");
+		Date endTime = Helper.readDateTime("Enter end time (dd/MM/yyyy HH:mm): ");
 
 		// Ensure that the end time is after the start time
 		if (endTime.before(startTime)) {

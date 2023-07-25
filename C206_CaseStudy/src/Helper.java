@@ -125,6 +125,34 @@ public class Helper {
     return date;
   }
 
+  public static Date readDateTime(String prompt) {
+    java.util.Date dateTime = null;
+    boolean valid = false;
+    while (!valid) {
+        try {
+            String input = readString(prompt).trim();
+            if (input.matches("\\d\\d/\\d\\d/\\d\\d\\d\\d \\d\\d:\\d\\d")) {
+                int day = Integer.parseInt(input.substring(0, 2));
+                int month = Integer.parseInt(input.substring(3, 5));
+                int year = Integer.parseInt(input.substring(6, 10));
+                int hour = Integer.parseInt(input.substring(11, 13));
+                int minute = Integer.parseInt(input.substring(14, 16));
+
+                java.util.Calendar cal = java.util.Calendar.getInstance();
+                cal.setLenient(false);
+                cal.set(year, month - 1, day, hour, minute, 0);
+                dateTime = cal.getTime();
+                valid = true;
+            } else {
+                System.out.println("*** Please enter a date and time (dd/MM/yyyy HH:mm) ***");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("*** Please enter a date and time (dd/MM/yyyy HH:mm) ***");
+        }
+    }
+    return dateTime;
+}
+
   private static String quit = "0";
 
   public static int getUserOption(String title, String[] menu) {

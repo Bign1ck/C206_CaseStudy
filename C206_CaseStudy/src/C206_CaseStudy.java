@@ -3,47 +3,46 @@ import java.util.Date;
 
 public class C206_CaseStudy {
 
-    private enum Option {
-        ADD_USER(1),
-        VIEW_USERS(2),
-        DELETE_USER(3),
-        ADD_ACTIVITY(4),
-        VIEW_ACTIVITIES(5),
-        DELETE_ACTIVITY(6),
-        ADD_REGISTRATION(7),
-        VIEW_REGISTRATIONS(8),
-        DELETE_REGISTRATION(9),
-        ADD_APPROVAL_STATUS(10),
-        VIEW_APPROVAL_STATUSES(11),
-        DELETE_APPROVAL_STATUS(12),
-        ADD_TIME_SLOT(13),
-        VIEW_TIME_SLOTS(14),
-        DELETE_TIME_SLOT(15),
-        ADD_ATTENDANCE(16),
-        VIEW_ATTENDANCE(17),
-        DELETE_ATTENDANCE(18),
-        QUIT(19);
+	private enum Option {
+		ADD_USER(1),
+		VIEW_USERS(2),
+		DELETE_USER(3),
+		ADD_ACTIVITY(4),
+		VIEW_ACTIVITIES(5),
+		DELETE_ACTIVITY(6),
+		ADD_REGISTRATION(7),
+		VIEW_REGISTRATIONS(8),
+		DELETE_REGISTRATION(9),
+		ADD_APPROVAL_STATUS(10),
+		VIEW_APPROVAL_STATUSES(11),
+		DELETE_APPROVAL_STATUS(12),
+		ADD_TIME_SLOT(13),
+		VIEW_TIME_SLOTS(14),
+		DELETE_TIME_SLOT(15),
+		ADD_ATTENDANCE(16),
+		VIEW_ATTENDANCE(17),
+		DELETE_ATTENDANCE(18),
+		QUIT(19);
 
-        private final int value;
+		private final int value;
 
-        Option(int value) {
-            this.value = value;
-        }
+		Option(int value) {
+			this.value = value;
+		}
 
-        public int getValue() {
-            return value;
-        }
+		public int getValue() {
+			return value;
+		}
 
-        public static Option fromValue(int value) {
-            for (Option option : Option.values()) {
-                if (option.getValue() == value) {
-                    return option;
-                }
-            }
-            throw new IllegalArgumentException("Invalid option value: " + value);
-        }
-    }
-
+		public static Option fromValue(int value) {
+			for (Option option : Option.values()) {
+				if (option.getValue() == value) {
+					return option;
+				}
+			}
+			throw new IllegalArgumentException("Invalid option value: " + value);
+		}
+	}
 
 	private static ArrayList<Users> userList = new ArrayList<>();
 	private static ArrayList<Activity> activityList = new ArrayList<>();
@@ -68,10 +67,10 @@ public class C206_CaseStudy {
 
 		int option = 0;
 
-	    while (option != Option.QUIT.getValue()) {
+		while (option != Option.QUIT.getValue()) {
 			menu();
 			option = Helper.readInt("Enter an option > ");
-	
+
 			try {
 				Option selectedOption = Option.fromValue(option);
 				switch (selectedOption) {
@@ -183,13 +182,13 @@ public class C206_CaseStudy {
 			}
 		}
 
-		if(check){
+		if (check) {
 			Users newUser = new Users(name, userId);
 			userList.add(newUser);
 
 			System.out.println("User added successfully.");
 		}
-		
+
 	}
 
 	private static void viewUsers() {
@@ -213,7 +212,7 @@ public class C206_CaseStudy {
 		System.out.println("DELETE USER");
 		String studentIdToDelete = Helper.readString("\nEnter student ID: ");
 
-		boolean executeDelete =  false;
+		boolean executeDelete = false;
 
 		for (Users user : userList) {
 			if (user.getStudentId().equalsIgnoreCase(studentIdToDelete)) {
@@ -224,7 +223,7 @@ public class C206_CaseStudy {
 			}
 		}
 
-		if (!executeDelete){
+		if (!executeDelete) {
 			System.out.println("User with the given student ID not found.");
 		}
 	}
@@ -255,17 +254,19 @@ public class C206_CaseStudy {
 
 		if (activityList.isEmpty()) {
 			System.out.println("No activities found.");
-		} 
-		
-		if(!activityList.isEmpty()) {
-			String ColumnTitles = String.format("%-5s %-15s %-10s %-30s", "ID", "Activity Name", "Capacity", "Prerequisites");
+		}
+
+		if (!activityList.isEmpty()) {
+			String ColumnTitles = String.format("%-5s %-15s %-10s %-30s", "ID", "Activity Name", "Capacity",
+					"Prerequisites");
 			System.out.println(ColumnTitles);
 
 			System.out.println("-".repeat(51));
 
 			for (Activity activity : activityList) {
-				String rowDetails = String.format("%-5s %-15s %-10s %-30s", activity.getActivityId(),activity.getActivityName(), 
-																				   activity.getCapacity(), activity.getPrerequisites());
+				String rowDetails = String.format("%-5s %-15s %-10s %-30s", activity.getActivityId(),
+						activity.getActivityName(),
+						activity.getCapacity(), activity.getPrerequisites());
 				System.out.println(rowDetails);
 			}
 		}
@@ -304,7 +305,7 @@ public class C206_CaseStudy {
 			}
 		}
 
-		if(!executeDelete){
+		if (!executeDelete) {
 			System.out.println("Invalid activity ID.");
 		}
 
@@ -628,12 +629,96 @@ public class C206_CaseStudy {
 		System.out.println("Time slot with ID " + timeSlotIdToDelete + " has been deleted.");
 	}
 
-	private static void addAttendance() {
-		// Implement code to add a new attendance to the attendanceList
+	private static Users getUserById(int userId) {
+		for (Users user : userList) {
+			if (user.getStudentId().equals(String.valueOf(userId))) {
+				return user;
+			}
+		}
+		return null; // User with the given ID not found
 	}
 
+	// Helper method to get a time slot by ID
+	private static TimeSlot getTimeSlotById(int timeSlotId) {
+		for (TimeSlot timeSlot : timeSlotList) {
+			if (timeSlot.getTimeSlotId() == timeSlotId) {
+				return timeSlot;
+			}
+		}
+		return null; // Time slot not found
+	}
+
+	private static void addAttendance() {
+		System.out.println("------------------------");
+    System.out.println("Add New Attendance");
+    System.out.println("------------------------");
+
+    // Get user details
+    viewUsers();
+    Integer userId = Helper.readInt("Enter the ID of the user: ");
+    Users selectedUser = getUserById(userId);
+    if (selectedUser == null) {
+        System.out.println("Error: User with the entered ID not found. Attendance creation aborted.");
+        return;
+    }
+
+    // Check if there are any time slots available
+    if (timeSlotList.isEmpty()) {
+        System.out.println("Error: No time slots found. Attendance creation aborted.");
+        return;
+    }
+
+    // Get time slot details
+    viewTimeSlots();
+    int timeSlotId = Helper.readInt("Enter the ID of the time slot: ");
+    TimeSlot selectedTimeSlot = getTimeSlotById(timeSlotId);
+    if (selectedTimeSlot == null) {
+        System.out.println("Error: Time slot with the entered ID not found. Attendance creation aborted.");
+        return;
+    }
+
+    // Get check-in time
+    Date checkInTime = Helper.readDate("Enter check-in time (dd/MM/yyyy HH:mm): ");
+    if (checkInTime == null) {
+        System.out.println("Error: Invalid check-in time format. Attendance creation aborted.");
+        return;
+    }
+
+    // Create a new Attendance object
+    Attendance newAttendance = new Attendance(selectedUser, selectedTimeSlot, checkInTime);
+
+    // Add the new attendance record to the attendanceList
+    attendanceList.add(newAttendance);
+
+    System.out.println("Attendance added successfully!");
+}
+
 	private static void viewAttendance() {
-		// Implement code to view all attendance in the attendanceList
+		System.out.println("------------------------");
+		System.out.println("View All Attendance");
+		System.out.println("------------------------");
+
+		if (attendanceList.isEmpty()) {
+			System.out.println("No attendance records found.");
+		} else {
+			System.out.println("Attendance Records:");
+			System.out.println(String.format("%-5s %-15s %-25s %-20s %-20s", "ID", "User", "Time Slot", "Check-in Time",
+					"Check-out Time"));
+			System.out.println("------------------------------------------------------------");
+			for (Attendance attendance : attendanceList) {
+				int attendanceId = attendance.getAttendanceId();
+				String userName = attendance.getUser().getName();
+				int timeSlotId = attendance.getTimeSlot().getTimeSlotId();
+				Date checkInTime = attendance.getCheckInTime();
+				Date checkOutTime = attendance.getCheckOutTime();
+
+				String checkInTimeString = (checkInTime != null) ? checkInTime.toString() : "N/A";
+				String checkOutTimeString = (checkOutTime != null) ? checkOutTime.toString() : "N/A";
+
+				System.out.println(String.format("%-5s %-15s %-25s %-20s %-20s", attendanceId, userName, timeSlotId,
+						checkInTimeString, checkOutTimeString));
+			}
+		}
 	}
 
 	private static void deleteAttendance() {

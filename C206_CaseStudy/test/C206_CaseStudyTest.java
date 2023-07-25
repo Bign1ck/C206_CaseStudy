@@ -39,6 +39,7 @@ public class C206_CaseStudyTest {
 
 	@Test
 	public void testAddUser() {
+		//test when userID is in database
 		String userID = "123456";
 		String userName = "Jim";
 
@@ -49,28 +50,33 @@ public class C206_CaseStudyTest {
 			Check_If_ID_Is_In_Database = user.getStudentId().equalsIgnoreCase(userID);
 			if(Check_If_ID_Is_In_Database){
 				assertTrue(Check_If_ID_Is_In_Database);
+				assertFalse(CheckIfSuccessfullyAdded);
 				break;
 			}
 		}
 
+		//test when userID id not in database
 		userID = "654321";
 		userName = "Jim";
-
-		if(!Check_If_ID_Is_In_Database){
-			Users newUser = new Users(userName, userID);
-			userList.add(newUser);
-			
-
-			for(Users user : userList){
-				CheckIfSuccessfullyAdded = user.getStudentId().equalsIgnoreCase(userID)
-										   &&user.getName().equalsIgnoreCase(userName);
-				assertTrue(CheckIfSuccessfullyAdded);
+		for(Users user : userList){
+			Check_If_ID_Is_In_Database = user.getStudentId().equalsIgnoreCase(userID);
+			if(Check_If_ID_Is_In_Database){
+				assertFalse(Check_If_ID_Is_In_Database);
+				break;
 			}
 		}
 
+			if(!Check_If_ID_Is_In_Database){
+				Users newUser = new Users(userName, userID);
+				userList.add(newUser);
 
-		
-		
+				for(Users user : userList){
+					CheckIfSuccessfullyAdded = user.getStudentId().equalsIgnoreCase(userID)
+											   &&user.getName().equalsIgnoreCase(userName);
+				}
+				assertTrue(CheckIfSuccessfullyAdded);
+			}
+
 		
 	}
 

@@ -322,6 +322,10 @@ public class C206_CaseStudy {
 			if (activity.getActivityId() == activityIdToDelete) {
 				executeDelete = true;
 				activityList.remove(activity);
+
+				// Remove time slots associated with the deleted activity
+				timeSlotList.removeIf(timeSlot -> timeSlot.getActivity().equals(activity));
+
 				System.out.println("Activity with ID " + activityIdToDelete + " has been deleted.");
 				break;
 			}
@@ -330,7 +334,6 @@ public class C206_CaseStudy {
 		if (!executeDelete) {
 			System.out.println("Invalid activity ID.");
 		}
-
 	}
 
 	private static void addRegistration() {

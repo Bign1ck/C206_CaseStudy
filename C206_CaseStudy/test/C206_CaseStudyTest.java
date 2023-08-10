@@ -21,10 +21,10 @@ public class C206_CaseStudyTest {
 		registrationList = new ArrayList<>();
 		approvalStatusList = new ArrayList<>();
 
-		Users user1 = new Users("John Doe", "123456");
+		Users user1 = new Users("John Doe", "12345", "S_john_doe", "S");
         userList.add(user1);
 
-        Users user2 = new Users("Jane Smith", "789012");
+        Users user2 = new Users("Jane Smith", "98765", "T_jane_smith", "T");
         userList.add(user2);
 	}
 

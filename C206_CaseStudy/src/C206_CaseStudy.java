@@ -1,32 +1,69 @@
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Scanner;
 
 public class C206_CaseStudy {
+	private enum GlobalOption {
+		ADD_USER(1, "Global"),
+		VIEW_USERS(2, "Global"),
+		DELETE_USER(3, "Global"),
+		ADD_ACTIVITY(4, "Global"),
+		VIEW_ACTIVITIES(5, "S"),
+		DELETE_ACTIVITY(6, "Global"),
+		ADD_REGISTRATION(7, "S"),
+		VIEW_REGISTRATIONS(8, "S"),
+		DELETE_REGISTRATION(9, "Global"),
+		ADD_APPROVAL_STATUS(10, "T"),
+		VIEW_APPROVAL_STATUSES(11, "T"),
+		DELETE_APPROVAL_STATUS(12, "T"),
+		ADD_TIME_SLOT(13, "T"),
+		VIEW_TIME_SLOTS(14, "T"),
+		DELETE_TIME_SLOT(15, "T"),
+		ADD_ATTENDANCE(16, "T"),
+		VIEW_ATTENDANCE(17, "T"),
+		DELETE_ATTENDANCE(18, "T"),
+		QUIT(19, "Global"),
+		GLOBAL_OPTION(20, "Global");
 
-	private enum Option {
-		ADD_USER(1),
-		VIEW_USERS(2),
-		DELETE_USER(3),
-		ADD_ACTIVITY(4),
-		VIEW_ACTIVITIES(5),
-		DELETE_ACTIVITY(6),
-		ADD_REGISTRATION(7),
-		VIEW_REGISTRATIONS(8),
-		DELETE_REGISTRATION(9),
-		ADD_APPROVAL_STATUS(10),
-		VIEW_APPROVAL_STATUSES(11),
-		DELETE_APPROVAL_STATUS(12),
-		ADD_TIME_SLOT(13),
-		VIEW_TIME_SLOTS(14),
-		DELETE_TIME_SLOT(15),
-		ADD_ATTENDANCE(16),
-		VIEW_ATTENDANCE(17),
-		DELETE_ATTENDANCE(18),
-		QUIT(19);
+		private final int value;
+		private final String[] allowedRoles;
+
+		GlobalOption(int value, String... allowedRoles) {
+			this.value = value;
+			this.allowedRoles = allowedRoles;
+		}
+
+		public int getValue() {
+			return value;
+		}
+
+		public static GlobalOption fromValue(int value) {
+			for (GlobalOption option : GlobalOption.values()) {
+				if (option.getValue() == value) {
+					return option;
+				}
+			}
+			throw new IllegalArgumentException("Invalid option value: " + value);
+		}
+
+		public boolean isAllowedForRole(String userRole) {
+			for (String role : allowedRoles) {
+				if (role.trim().equalsIgnoreCase(userRole.trim())) {
+					return true;
+				}
+			}
+			return false;
+		}
+	}
+
+	private enum StudentOption {
+		VIEW_ACTIVITIES(1),
+		ADD_REGISTRATION(2),
+		QUIT(3);
 
 		private final int value;
 
-		Option(int value) {
+		StudentOption(int value) {
 			this.value = value;
 		}
 
@@ -34,14 +71,90 @@ public class C206_CaseStudy {
 			return value;
 		}
 
-		public static Option fromValue(int value) {
-			for (Option option : Option.values()) {
+		public static StudentOption fromValue(int value) {
+			for (StudentOption option : StudentOption.values()) {
 				if (option.getValue() == value) {
 					return option;
 				}
 			}
 			throw new IllegalArgumentException("Invalid option value: " + value);
 		}
+	}
+
+	private enum TeacherOption {
+		ADD_ACTIVITY(1),
+		VIEW_ACTIVITY(2),
+		DELETE_ACTIVITY(3),
+		ADD_REGISTRATION(4),
+		VIEW_REGISTRATION(5),
+		DELETE_REGISTRATION(6),
+		QUIT(7);
+
+		private final int value;
+
+		TeacherOption(int value) {
+			this.value = value;
+		}
+
+		public int getValue() {
+			return value;
+		}
+
+		public static TeacherOption fromValue(int value) {
+			for (TeacherOption option : TeacherOption.values()) {
+				if (option.getValue() == value) {
+					return option;
+				}
+			}
+			throw new IllegalArgumentException("Invalid option value: " + value);
+		}
+	}
+
+	private enum AdminOption {
+		ADD_USER(1),
+		VIEW_USERS(2),
+		DELETE_USER(3),
+		ADD_ACTIVITY(4),
+		VIEW_ACTIVITY(5),
+		DELETE_ACTIVITY(6),
+		QUIT(7);
+
+		private final int value;
+
+		AdminOption(int value) {
+			this.value = value;
+		}
+
+		public int getValue() {
+			return value;
+		}
+
+		public static AdminOption fromValue(int value) {
+			for (AdminOption option : AdminOption.values()) {
+				if (option.getValue() == value) {
+					return option;
+				}
+			}
+			throw new IllegalArgumentException("Invalid option value: " + value);
+		}
+	}
+
+	private static Users login(ArrayList<Users> userList) {
+		Scanner scanner = new Scanner(System.in);
+
+		System.out.println("Welcome to the login page");
+
+		String username = Helper.readString("Username: ");
+
+		for (Users user : userList) {
+			if (user.getUsername().equals(username)) {
+				System.out.println("Login successful.");
+				return user;
+			}
+		}
+
+		System.out.println("Login failed. Invalid username.");
+		return null;
 	}
 
 	private static ArrayList<Users> userList = new ArrayList<>();
@@ -51,111 +164,29 @@ public class C206_CaseStudy {
 	private static ArrayList<TimeSlot> timeSlotList = new ArrayList<>();
 	private static ArrayList<Attendance> attendanceList = new ArrayList<>();
 
-	public static void main(String[] args) {
 
-		// Hardcoding user data
-		userList.add(new Users("John Doe", "123456"));
-		userList.add(new Users("Jane Smith", "789012"));
+	private static void mainMenu(Users loggedInUser) {
+		displayMenu(loggedInUser.getRole());
 
-		// Hardcoding activity data
-		activityList.add(new Activity("Swimming", 20, "Swimming goggles"));
-		activityList.add(new Activity("Yoga", 15, "Yoga mat"));
-
-		// Hardcoding time slot data
-		TimeSlot timeSlot1 = new TimeSlot(new Date(), new Date(), activityList.get(0));
-		timeSlotList.add(timeSlot1);
-
-		TimeSlot timeSlot2 = new TimeSlot(new Date(), new Date(), activityList.get(1));
-		timeSlotList.add(timeSlot2);
-
-		// Hardcoding registration data
-		Registration registration1 = new Registration(userList.get(0), activityList.get(0), "Pending");
-		registrationList.add(registration1);
-
-		Registration registration2 = new Registration(userList.get(1), activityList.get(1), "Approved");
-		registrationList.add(registration2);
-
-		// Hardcoding approval status data
-		approvalStatusList.add(new ApprovalStatus("Pending"));
-		approvalStatusList.add(new ApprovalStatus("Approved"));
-		approvalStatusList.add(new ApprovalStatus("Rejected"));
-
-		// Hardcoding attendance data
-		Attendance attendance1 = new Attendance(userList.get(0), timeSlotList.get(0), new Date());
-		attendanceList.add(attendance1);
-
-		Attendance attendance2 = new Attendance(userList.get(1), timeSlotList.get(1), new Date());
-		attendanceList.add(attendance2);
-
-		int option = 0;
-
-		while (option != Option.QUIT.getValue()) {
-			menu();
-			option = Helper.readInt("Enter an option > ");
-
+		while (true) {
+			int option = Helper.readInt("Enter an option > ");
 			try {
-				Option selectedOption = Option.fromValue(option);
-				switch (selectedOption) {
-					case ADD_USER:
-						addUser();
+				switch (loggedInUser.getRole()) {
+					case "S":
+						handleStudentOption(loggedInUser, StudentOption.fromValue(option));
 						break;
-					case VIEW_USERS:
-						viewUsers();
+					case "T":
+						handleTeacherOption(loggedInUser, TeacherOption.fromValue(option));
 						break;
-					case DELETE_USER:
-						deleteUser();
+					case "A":
+						handleAdminOption(loggedInUser, AdminOption.fromValue(option));
 						break;
-					case ADD_ACTIVITY:
-						addActivity();
-						break;
-					case VIEW_ACTIVITIES:
-						viewActivities();
-						break;
-					case DELETE_ACTIVITY:
-						deleteActivity();
-						break;
-					case ADD_REGISTRATION:
-						addRegistration();
-						break;
-					case VIEW_REGISTRATIONS:
-						viewRegistrations();
-						break;
-					case DELETE_REGISTRATION:
-						deleteRegistration();
-						break;
-					case ADD_APPROVAL_STATUS:
-						addApprovalStatus();
-						break;
-					case VIEW_APPROVAL_STATUSES:
-						viewApprovalStatuses();
-						break;
-					case DELETE_APPROVAL_STATUS:
-						deleteApprovalStatus();
-						break;
-					case ADD_TIME_SLOT:
-						addTimeSlot();
-						break;
-					case VIEW_TIME_SLOTS:
-						viewTimeSlots();
-						break;
-					case DELETE_TIME_SLOT:
-						deleteTimeSlot();
-						break;
-					case ADD_ATTENDANCE:
-						addAttendance();
-						break;
-					case VIEW_ATTENDANCE:
-						viewAttendance();
-						break;
-					case DELETE_ATTENDANCE:
-						deleteAttendance();
-						break;
-					case QUIT:
-						System.out.println("Bye!");
+					case "Global":
+						handleGlobalOption(loggedInUser, GlobalOption.fromValue(option));
 						break;
 					default:
-						System.out.println("Invalid option");
-						break;
+						System.out.println("Invalid role.");
+						return;
 				}
 			} catch (IllegalArgumentException e) {
 				System.out.println("Invalid option. Please enter a valid option number.");
@@ -163,36 +194,326 @@ public class C206_CaseStudy {
 		}
 	}
 
-	private static void menu() {
-
-		System.out.println("-".repeat(24));
-		System.out.println("Menu Options");
-		System.out.println("-".repeat(24));
-		System.out.println("1. Add a new user");
-		System.out.println("2. View all users");
-		System.out.println("3. Delete an existing user");
-		System.out.println("4. Add a new activity");
-		System.out.println("5. View all activities");
-		System.out.println("6. Delete an existing activity");
-		System.out.println("7. Add a new registration");
-		System.out.println("8. View all registrations");
-		System.out.println("9. Delete an existing registration");
-		System.out.println("10. Add a new approval status");
-		System.out.println("11. View all approval statuses");
-		System.out.println("12. Delete an existing approval status");
-		System.out.println("13. Add a new time slot");
-		System.out.println("14. View all time slots");
-		System.out.println("15. Delete an existing time slot");
-		System.out.println("16. Add a new attendance");
-		System.out.println("17. View all attendance");
-		System.out.println("18. Delete an existing attendance");
-		System.out.println("19. Quit");
+	private static void handleStudentOption(Users loggedInUser, StudentOption selectedOption) {
+		switch (selectedOption) {
+			case VIEW_ACTIVITIES:
+				viewActivities();
+				break;
+			case ADD_REGISTRATION:
+				addRegistration();
+				break;
+			case QUIT:
+				System.out.println("Bye!");
+				System.exit(0);
+				break;
+			default:
+				System.out.println("Invalid option");
+				break;
+		}
 	}
+
+	private static void handleTeacherOption(Users loggedInUser, TeacherOption selectedOption) {
+		switch (selectedOption) {
+			case ADD_ACTIVITY:
+				addActivity();
+				break;
+			case VIEW_ACTIVITY:
+				viewActivities();
+				break;
+			case DELETE_ACTIVITY:
+				deleteActivity();
+				break;
+			case ADD_REGISTRATION:
+				addRegistration();
+				break;
+			case VIEW_REGISTRATION:
+				viewRegistrations();
+				break;
+			case DELETE_REGISTRATION:
+				deleteRegistration();
+				break;
+			case QUIT:
+				System.out.println("Bye!");
+				System.exit(0);
+				break;
+			default:
+				System.out.println("Invalid option");
+				break;
+		}
+	}
+
+	private static void handleAdminOption(Users loggedInUser, AdminOption selectedOption) {
+		switch (selectedOption) {
+			case ADD_USER:
+				addUser();
+				break;
+			case VIEW_USERS:
+				viewUsers();
+				break;
+			case DELETE_USER:
+				deleteUser();
+				break;
+			case ADD_ACTIVITY:
+				addActivity();
+				break;
+			case VIEW_ACTIVITY:
+				viewActivities();
+				break;
+			case DELETE_ACTIVITY:
+				deleteActivity();
+				break;
+			case QUIT:
+				System.out.println("Bye!");
+				System.exit(0);
+				break;
+			default:
+				System.out.println("Invalid option");
+				break;
+		}
+	}
+
+	private static void handleGlobalOption(Users loggedInUser, GlobalOption selectedOption) {
+		switch (selectedOption) {
+			case ADD_USER:
+				addUser();
+				break;
+			case VIEW_USERS:
+				viewUsers();
+				break;
+			case DELETE_USER:
+				deleteUser();
+				break;
+			case ADD_ACTIVITY:
+				addActivity();
+				break;
+			case VIEW_ACTIVITIES:
+				viewActivities();
+				break;
+			case DELETE_ACTIVITY:
+				deleteActivity();
+				break;
+			case ADD_REGISTRATION:
+				addRegistration();
+				break;
+			case VIEW_REGISTRATIONS:
+				viewRegistrations();
+				break;
+			case DELETE_REGISTRATION:
+				deleteRegistration();
+				break;
+			case ADD_APPROVAL_STATUS:
+				addApprovalStatus();
+				break;
+			case VIEW_APPROVAL_STATUSES:
+				viewApprovalStatuses();
+				break;
+			case DELETE_APPROVAL_STATUS:
+				deleteApprovalStatus();
+				break;
+			case ADD_TIME_SLOT:
+				addTimeSlot();
+				break;
+			case VIEW_TIME_SLOTS:
+				viewTimeSlots();
+				break;
+			case DELETE_TIME_SLOT:
+				deleteTimeSlot();
+				break;
+			case ADD_ATTENDANCE:
+				addAttendance();
+				break;
+			case VIEW_ATTENDANCE:
+				viewAttendance();
+				break;
+			case DELETE_ATTENDANCE:
+				deleteAttendance();
+				break;
+			case QUIT:
+				System.out.println("Bye!");
+				System.exit(0);
+				break;
+			case GLOBAL_OPTION:
+				System.out.println("Global option selected.");
+				break;
+			default:
+				System.out.println("Invalid option");
+				break;
+		}
+	}
+
+	public static void main(String[] args) {
+		userList.add(new Users("John Doe", "12345", "S_john_doe", "S"));
+		userList.add(new Users("Jane Smith", "98765", "T_jane_smith", "T"));
+		userList.add(new Users("Admin User", "99999", "A_admin_user", "A"));
+		userList.add(new Users("Global Admin User", "99999", "A_Gadmin_user", "Global"));
+
+		activityList.add(new Activity("Swimming", 20, "Swimming goggles"));
+		activityList.add(new Activity("Yoga", 15, "Yoga mat"));
+
+		timeSlotList.add(new TimeSlot(new Date(), new Date(), activityList.get(0)));
+		timeSlotList.add(new TimeSlot(new Date(), new Date(), activityList.get(1)));
+
+		registrationList.add(new Registration(userList.get(0), activityList.get(0), "Pending"));
+		registrationList.add(new Registration(userList.get(1), activityList.get(1), "Approved"));
+
+		approvalStatusList.add(new ApprovalStatus("Pending"));
+		approvalStatusList.add(new ApprovalStatus("Approved"));
+		approvalStatusList.add(new ApprovalStatus("Rejected"));
+
+		attendanceList.add(new Attendance(userList.get(0), timeSlotList.get(0), new Date()));
+		attendanceList.add(new Attendance(userList.get(1), timeSlotList.get(1), new Date()));
+
+		Users loggedInUser = login(userList);
+    if (loggedInUser == null) {
+        System.out.println("Login failed. Exiting.");
+        return;
+    }
+
+    System.out.println("Login successful as " + loggedInUser.getUsername() + " (" + loggedInUser.getRole() + ").");
+
+    mainMenu(loggedInUser);
+}
+
+		// while (true) {
+		// option = Helper.readInt("Enter an option > ");
+		// try {
+		// if (loggedInUser.getRole().equals("S")) {
+		// StudentOption selectedOption = StudentOption.fromValue(option);
+
+		// if (selectedOption == StudentOption.QUIT) {
+		// System.out.println("Bye!");
+		// break;
+		// }
+		// System.out.println("Selected Option: " + selectedOption);
+		// // Rest of your handling logic for student options...
+		// } else if (loggedInUser.getRole().equals("T")) {
+		// TeacherOption selectedOption = TeacherOption.fromValue(option);
+		// if (selectedOption == TeacherOption.QUIT) {
+		// System.out.println("Bye!");
+		// break;
+		// }
+		// System.out.println("Selected Option: " + selectedOption);
+		// // Rest of your handling logic for teacher options...
+		// } else if (loggedInUser.getRole().equals("A")) {
+		// AdminOption selectedOption = AdminOption.fromValue(option);
+		// if (selectedOption == AdminOption.QUIT) {
+		// System.out.println("Bye!");
+		// break;
+		// }
+		// System.out.println("Selected Option: " + selectedOption);
+		// // Rest of your handling logic for admin options...
+		// } else if (loggedInUser.getRole().equals("Global")) {
+		// GlobalOption selectedOption = GlobalOption.fromValue(option);
+		// if (selectedOption == GlobalOption.QUIT) {
+		// System.out.println("Bye!");
+		// break;
+		// }
+		// System.out.println("Selected Option: " + selectedOption);
+		// // Rest of your handling logic for global options...
+		// } else {
+		// System.out.println("Invalid role.");
+		// break;
+		// }
+
+		// } catch (IllegalArgumentException e) {
+		// System.out.println("Invalid option. Please enter a valid option number.");
+		// }
+		// }
+
+		// int option = -1;
+
+		// while (option != GlobalOption.QUIT.getValue() && option !=
+		// StudentOption.QUIT.getValue()
+		// && option != TeacherOption.QUIT.getValue() && option !=
+		// AdminOption.QUIT.getValue()) {
+		// option = Helper.readInt("Enter an option > ");
+		// try {
+		// GlobalOption selectedOption = GlobalOption.fromValue(option);
+		// // StudentOption selectedOption = StudentOption.fromValue(option);
+		// // TeacherOption selectedOption = TeacherOption.fromValue(option);
+		// // AdminOption selectedOption = AdminOption.fromValue(option);
+		// System.out.println("Selected Option: " + selectedOption);
+		// System.out.println("Logged-in user role: " + loggedInUser.getRole());
+
+		// if (!selectedOption.isAllowedForRole(loggedInUser.getRole())) {
+		// System.out.println("You do not have permission for this option.");
+		// continue;
+		// }
+
+		// switch (loggedInUser.getRole()) {
+		// case "S":
+		// handleStudentOption(selectedOption);
+		// break;
+		// case "T":
+		// handleTeacherOption(selectedOption);
+		// break;
+		// case "A":
+		// handleAdminOption(selectedOption);
+		// break;
+		// case "Global":
+		// handleGlobalOption(selectedOption);
+		// break;
+		// default:
+		// System.out.println("Invalid role.");
+		// break;
+		// }
+
+		// } catch (IllegalArgumentException e) {
+		// System.out.println("Invalid option. Please enter a valid option number.");
+		// }
+		// }
+
+	
+
+	
+
+	private static void displayMenu(String role) {
+		switch (role) {
+			case "S":
+				displayStudentMenu();
+				break;
+			case "T":
+				displayTeacherMenu();
+				break;
+			case "A":
+				displayAdminMenu();
+				break;
+			default:
+				System.out.println("Invalid role.");
+				break;
+		}
+	}
+
+	private static void displayStudentMenu() {
+		System.out.println("Student -->");
+		for (StudentOption studentOption : StudentOption.values()) {
+			System.out.println(studentOption.getValue() + ". " + studentOption.name().replace("_", " "));
+		}
+	}
+
+	private static void displayTeacherMenu() {
+		System.out.println("Teacher -->");
+		for (TeacherOption teacherOption : TeacherOption.values()) {
+			System.out.println(teacherOption.getValue() + ". " + teacherOption.name().replace("_", " "));
+		}
+	}
+
+	private static void displayAdminMenu() {
+		System.out.println("Admin -->");
+		for (AdminOption adminOption : AdminOption.values()) {
+			System.out.println(adminOption.getValue() + ". " + adminOption.name().replace("_", " "));
+		}
+	}
+
+	// ------------------------------------------------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------------------------------------------------
 
 	private static void addUser() {
 		System.out.println("ADD NEW USER");
 		String name = Helper.readString("Enter username: ");
 		String userId = Helper.readString("Enter userID: ");
+		String role = Helper.readString("Enter user Role: ");
 
 		// Check if the student ID is already taken
 		boolean check = true;
@@ -205,7 +526,7 @@ public class C206_CaseStudy {
 		}
 
 		if (check) {
-			Users newUser = new Users(name, userId);
+			Users newUser = new Users(name, userId, userId, role);
 			userList.add(newUser);
 
 			System.out.println("User added successfully.");

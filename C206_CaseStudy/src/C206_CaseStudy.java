@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Scanner;
 
 public class C206_CaseStudy {
 	private enum GlobalOption {
@@ -140,8 +139,6 @@ public class C206_CaseStudy {
 	}
 
 	private static Users login(ArrayList<Users> userList) {
-		Scanner scanner = new Scanner(System.in);
-
 		System.out.println("Welcome to the login page");
 
 		String username = Helper.readString("Username: ");

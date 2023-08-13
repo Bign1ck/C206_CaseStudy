@@ -1,4 +1,5 @@
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class Attendance {
     private static int nextId = 1;
@@ -8,12 +9,14 @@ public class Attendance {
     private TimeSlot timeSlot;
     private Date checkInTime;
     private Date checkOutTime;
+    private String attendanceStatus;
 
     public Attendance(Users user, TimeSlot timeSlot, Date checkInTime) {
         this.attendanceId = nextId++;
         this.user = user;
         this.timeSlot = timeSlot;
         this.checkInTime = checkInTime;
+        this.attendanceStatus = calculateAttendanceStatus();
     }
 
 
@@ -53,12 +56,44 @@ public class Attendance {
         this.checkOutTime = checkOutTime;
     }
 
+    public String getAttendanceStatus() {
+        return attendanceStatus;
+    }
+    public void setAttendanceStatus(String attendanceStatus) {
+        this.attendanceStatus = attendanceStatus;
+    }
+
+    private String calculateAttendanceStatus() {
+    if (checkInTime == null) {
+        return "Absent";
+    }
+    
+    long minutesLate = calculateMinutesLate();
+    
+    if (minutesLate > 30) {
+        return "Partial";
+    } else if (checkInTime.before(timeSlot.getStartTime())) {
+        return "Late";
+    } else if (checkInTime.after(timeSlot.getStartTime()) || checkInTime.equals(timeSlot.getStartTime())) {
+        return "Present";
+    }
+
+    return "Unknown";
+}
+
+private long calculateMinutesLate() {
+    long diffInMillis = checkInTime.getTime() - timeSlot.getStartTime().getTime();
+    return TimeUnit.MILLISECONDS.toMinutes(diffInMillis);
+}
+
+
     @Override
     public String toString() {
         return "Attendance ID: " + attendanceId +
                ", User: " + user.getName() +
                ", Time Slot: " + timeSlot.getTimeSlotId() +
                ", Check-in Time: " + checkInTime +
-               ", Check-out Time: " + checkOutTime;
+               ", Check-out Time: " + checkOutTime +
+               ", Status: " + attendanceStatus;
     }
 }

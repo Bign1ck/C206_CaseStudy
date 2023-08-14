@@ -19,7 +19,6 @@ public class Attendance {
         this.attendanceStatus = calculateAttendanceStatus();
     }
 
-
     public int getAttendanceId() {
         return attendanceId;
     }
@@ -59,41 +58,43 @@ public class Attendance {
     public String getAttendanceStatus() {
         return attendanceStatus;
     }
+
     public void setAttendanceStatus(String attendanceStatus) {
         this.attendanceStatus = attendanceStatus;
     }
 
-    private String calculateAttendanceStatus() {
-    if (checkInTime == null) {
-        return "Absent";
+    public String calculateAttendanceStatus() {
+        if (checkInTime == null) {
+            return "Absent";
+        }
+
+        long minutesLate = calculateMinutesLate();
+
+        if (minutesLate >= 30) {
+            return "Partial";
+        } else if (checkInTime.after(timeSlot.getStartTime())) {
+            return "Late";
+        } else if (checkInTime.before(timeSlot.getStartTime())) {
+            return "Present";
+        }
+
+        return "Unknown";
     }
-    
-    long minutesLate = calculateMinutesLate();
-    
-    if (minutesLate > 30) {
-        return "Partial";
-    } else if (checkInTime.before(timeSlot.getStartTime())) {
-        return "Late";
-    } else if (checkInTime.after(timeSlot.getStartTime()) || checkInTime.equals(timeSlot.getStartTime())) {
-        return "Present";
+
+    private long calculateMinutesLate() {
+        long checkInMillis = checkInTime.getTime();
+        long startTimeMillis = timeSlot.getStartTime().getTime();
+        long diffMillis = checkInMillis - startTimeMillis;
+        return TimeUnit.MILLISECONDS.toMinutes(diffMillis);
     }
-
-    return "Unknown";
-}
-
-private long calculateMinutesLate() {
-    long diffInMillis = checkInTime.getTime() - timeSlot.getStartTime().getTime();
-    return TimeUnit.MILLISECONDS.toMinutes(diffInMillis);
-}
-
 
     @Override
     public String toString() {
         return "Attendance ID: " + attendanceId +
-               ", User: " + user.getName() +
-               ", Time Slot: " + timeSlot.getTimeSlotId() +
-               ", Check-in Time: " + checkInTime +
-               ", Check-out Time: " + checkOutTime +
-               ", Status: " + attendanceStatus;
+                ", User: " + user.getName() +
+                ", Time Slot: " + timeSlot.getTimeSlotId() +
+                ", Check-in Time: " + checkInTime +
+                ", Check-out Time: " + checkOutTime +
+                ", Status: " + attendanceStatus;
     }
 }

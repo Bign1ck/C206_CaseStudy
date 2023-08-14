@@ -369,9 +369,13 @@ public class C206_CaseStudy {
 		approvalStatusList.add(new ApprovalStatus("Approved"));
 		approvalStatusList.add(new ApprovalStatus("Rejected"));
 
-		attendanceList.add(new Attendance(userList.get(0), timeSlotList.get(0), new Date()));
+		attendanceList.add(new Attendance(userList.get(0), timeSlotList.get(0), new Date(System.currentTimeMillis() - 12 * 60 * 1000)));
 		attendanceList.add(new Attendance(userList.get(1), timeSlotList.get(1), new Date()));
-		attendanceList.add(new Attendance(userList.get(5), timeSlotList.get(2), new Date()));
+		attendanceList.add(new Attendance(userList.get(5), timeSlotList.get(2),
+				new Date(System.currentTimeMillis() + 12 * 60 * 1000)));
+		attendanceList.add(new Attendance(userList.get(4), timeSlotList.get(1),
+				new Date(System.currentTimeMillis() + 40 * 60 * 1000))); // Partial for Yoga
+		attendanceList.add(new Attendance(userList.get(6), timeSlotList.get(3), null)); // Absent for Dancing
 
 		Users loggedInUser = login(userList);
 		if (loggedInUser == null) {
@@ -1051,13 +1055,28 @@ public class C206_CaseStudy {
 		// Set check-in time to the current time
 		Date checkInTime = new Date();
 
-		// Create a new Attendance object
-		Attendance newAttendance = new Attendance(selectedUser, selectedTimeSlot, checkInTime);
+		// Check if an attendance already exists for the same user and time slot
+		Attendance existingAttendance = null;
+		for (Attendance attendance : attendanceList) {
+			if (attendance.getUser().equals(selectedUser) && attendance.getTimeSlot().equals(selectedTimeSlot)) {
+				existingAttendance = attendance;
+				break;
+			}
+		}
 
-		// Add the new attendance record to the attendanceList
-		attendanceList.add(newAttendance);
+		// If existing attendance is found, update the check-in time and status
+		if (existingAttendance != null) {
+			existingAttendance.setCheckInTime(checkInTime);
+			existingAttendance.setAttendanceStatus(existingAttendance.calculateAttendanceStatus());
+			System.out.println("Attendance updated successfully!");
+		} else {
+			// Create a new Attendance object
+			Attendance newAttendance = new Attendance(selectedUser, selectedTimeSlot, checkInTime);
 
-		System.out.println("Attendance added successfully!");
+			// Add the new attendance record to the attendanceList
+			attendanceList.add(newAttendance);
+			System.out.println("Attendance added successfully!");
+		}
 	}
 
 	private static void viewAttendance() {
@@ -1069,18 +1088,20 @@ public class C206_CaseStudy {
 			System.out.println("No attendance records found.");
 		} else {
 			System.out.println("Attendance Records:");
+			System.out.println(String.format("%-5s %-15s %-20s %-30s %-30s %-20s", "ID", "User", "Activity",
+					"Time Slot Start Time", "Check-in Time", "Attendance Status"));
 			System.out.println(
-					String.format("%-5s %-15s %-20s %-20s", "ID", "User", "Check-in Time", "Attendance Status"));
-			System.out.println("--------------------------------------------------");
+					"--------------------------------------------------------------------------------------------------------------");
 			for (Attendance attendance : attendanceList) {
 				int attendanceId = attendance.getAttendanceId();
 				String userName = attendance.getUser().getName();
-				String checkInTime = (attendance.getCheckInTime() != null) ? attendance.getCheckInTime().toString()
-						: "N/A";
+				String activityName = attendance.getTimeSlot().getActivity().getActivityName();
+				Date startTime = attendance.getTimeSlot().getStartTime();
+				Date checkInTime = attendance.getCheckInTime();
 				String attendanceStatus = attendance.getAttendanceStatus();
 
-				System.out.println(
-						String.format("%-5s %-15s %-20s %-20s", attendanceId, userName, checkInTime, attendanceStatus));
+				System.out.println(String.format("%-5s %-15s %-20s %-30s %-30s %-20s", attendanceId, userName,
+						activityName, startTime, checkInTime, attendanceStatus));
 			}
 		}
 	}

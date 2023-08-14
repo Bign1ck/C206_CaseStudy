@@ -342,7 +342,7 @@ public class C206_CaseStudy {
 		userList.add(new Users("John Doe", "12345", "S_john_doe", "S"));
 		userList.add(new Users("Jane Smith", "98765", "T_jane_smith", "T"));
 		userList.add(new Users("Admin User", "99999", "A_admin_user", "A"));
-		userList.add(new Users("Global Admin User", "99999", "A_Gadmin_user", "Global"));
+		userList.add(new Users("Global Admin User", "34567", "G_admin_user", "Global"));
 
 		activityList.add(new Activity("Swimming", 20, "Swimming goggles"));
 		activityList.add(new Activity("Yoga", 15, "Yoga mat"));
@@ -475,6 +475,9 @@ public class C206_CaseStudy {
 			case "A":
 				displayAdminMenu();
 				break;
+			case "Global":
+				displayGlobalMenu();
+				break;
 			default:
 				System.out.println("Invalid role.");
 				break;
@@ -499,6 +502,13 @@ public class C206_CaseStudy {
 		System.out.println("Admin -->");
 		for (AdminOption adminOption : AdminOption.values()) {
 			System.out.println(adminOption.getValue() + ". " + adminOption.name().replace("_", " "));
+		}
+	}
+
+	private static void displayGlobalMenu() {
+		System.out.println("Global Admin -->");
+		for (GlobalOption GlobalOption : GlobalOption.values()) {
+			System.out.println(GlobalOption.getValue() + ". " + GlobalOption.name().replace("_", " "));
 		}
 	}
 

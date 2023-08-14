@@ -364,7 +364,7 @@ public class C206_CaseStudy {
 		registrationList.add(new Registration(userList.get(0), activityList.get(0), "Pending"));
 		registrationList.add(new Registration(userList.get(1), activityList.get(1), "Approved"));
 		registrationList.add(new Registration(userList.get(2), activityList.get(2), "Approved"));
-		registrationList.add(new Registration(userList.get(3), activityList.get(3), "Pending"));
+		
 
 		approvalStatusList.add(new ApprovalStatus("Pending"));
 		approvalStatusList.add(new ApprovalStatus("Approved"));

@@ -20,9 +20,11 @@ public class Activity {
     public String getActivityName() {
         return activityName;
     }
+
     public int getActivityId() {
         return activityId;
     }
+
     public void setActivityName(String activityName) {
         this.activityName = activityName;
     }
@@ -33,6 +35,18 @@ public class Activity {
 
     public void setCapacity(int capacity) {
         this.capacity = capacity;
+    }
+
+    public void increaseCapacity() {
+        this.capacity++;
+    }
+
+    public void reduceCapacity() {
+        if (capacity > 0) {
+            capacity--;
+        } else {
+            System.out.println("Activity capacity is already at its minimum.");
+        }
     }
 
     public String getPrerequisites() {

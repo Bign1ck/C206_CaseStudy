@@ -1,8 +1,7 @@
 import java.util.Date;
 
-public class Registration {
+class Registration {
     private static int nextId = 1;
-
     private int registrationId;
     private Users user;
     private Activity activity;

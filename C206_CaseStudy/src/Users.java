@@ -5,7 +5,7 @@ public class Users {
     private String name;
     private String studentId;
     private String username;
-     private String role;
+    private String role;
 
      public Users(String name, String studentId, String username, String role) { 
         this.userId = nextId++;

@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class C206_CaseStudy {
 	private enum GlobalOption {
@@ -15,14 +16,14 @@ public class C206_CaseStudy {
 		ADD_APPROVAL_STATUS(10, "T"),
 		VIEW_APPROVAL_STATUSES(11, "T"),
 		DELETE_APPROVAL_STATUS(12, "T"),
+		UPDATE_APPROVAL_STATUS(12, "T"),
 		ADD_TIME_SLOT(13, "T"),
 		VIEW_TIME_SLOTS(14, "T"),
 		DELETE_TIME_SLOT(15, "T"),
 		ADD_ATTENDANCE(16, "T"),
 		VIEW_ATTENDANCE(17, "T"),
 		DELETE_ATTENDANCE(18, "T"),
-		QUIT(19, "Global"),
-		GLOBAL_OPTION(20, "Global");
+		QUIT(19, "Global");
 
 		private final int value;
 		private final String[] allowedRoles;
@@ -87,7 +88,8 @@ public class C206_CaseStudy {
 		ADD_REGISTRATION(4),
 		VIEW_REGISTRATION(5),
 		DELETE_REGISTRATION(6),
-		QUIT(7);
+		UPDATE_APPROVAL_STATUS(7),
+		QUIT(8);
 
 		private final int value;
 
@@ -161,7 +163,6 @@ public class C206_CaseStudy {
 	private static ArrayList<TimeSlot> timeSlotList = new ArrayList<>();
 	private static ArrayList<Attendance> attendanceList = new ArrayList<>();
 
-
 	private static void mainMenu(Users loggedInUser) {
 		displayMenu(loggedInUser.getRole());
 
@@ -228,6 +229,9 @@ public class C206_CaseStudy {
 				break;
 			case DELETE_REGISTRATION:
 				deleteRegistration();
+				break;
+			case UPDATE_APPROVAL_STATUS:
+				updateRegistrationStatus();
 				break;
 			case QUIT:
 				System.out.println("Bye!");
@@ -307,6 +311,9 @@ public class C206_CaseStudy {
 			case DELETE_APPROVAL_STATUS:
 				deleteApprovalStatus();
 				break;
+			case UPDATE_APPROVAL_STATUS:
+				deleteApprovalStatus();
+				break;
 			case ADD_TIME_SLOT:
 				addTimeSlot();
 				break;
@@ -329,9 +336,6 @@ public class C206_CaseStudy {
 				System.out.println("Bye!");
 				System.exit(0);
 				break;
-			case GLOBAL_OPTION:
-				System.out.println("Global option selected.");
-				break;
 			default:
 				System.out.println("Invalid option");
 				break;
@@ -343,15 +347,23 @@ public class C206_CaseStudy {
 		userList.add(new Users("Jane Smith", "98765", "T_jane_smith", "T"));
 		userList.add(new Users("Admin User", "99999", "A_admin_user", "A"));
 		userList.add(new Users("Global Admin User", "34567", "G_admin_user", "Global"));
+		userList.add(new Users("Alice Brown", "11111", "S_alice_brown", "S"));
+		userList.add(new Users("Bob Johnson", "22222", "T_bob_johnson", "T"));
+		userList.add(new Users("Eva Williams", "33333", "A_eva_williams", "A"));
 
 		activityList.add(new Activity("Swimming", 20, "Swimming goggles"));
 		activityList.add(new Activity("Yoga", 15, "Yoga mat"));
+		activityList.add(new Activity("Running", 30, "Running shoes"));
+		activityList.add(new Activity("Dancing", 25, "Dance shoes"));
 
 		timeSlotList.add(new TimeSlot(new Date(), new Date(), activityList.get(0)));
 		timeSlotList.add(new TimeSlot(new Date(), new Date(), activityList.get(1)));
+		timeSlotList.add(new TimeSlot(new Date(), new Date(), activityList.get(2)));
+		timeSlotList.add(new TimeSlot(new Date(), new Date(), activityList.get(3)));
 
 		registrationList.add(new Registration(userList.get(0), activityList.get(0), "Pending"));
 		registrationList.add(new Registration(userList.get(1), activityList.get(1), "Approved"));
+		registrationList.add(new Registration(userList.get(2), activityList.get(2), "Approved"));
 
 		approvalStatusList.add(new ApprovalStatus("Pending"));
 		approvalStatusList.add(new ApprovalStatus("Approved"));
@@ -359,110 +371,18 @@ public class C206_CaseStudy {
 
 		attendanceList.add(new Attendance(userList.get(0), timeSlotList.get(0), new Date()));
 		attendanceList.add(new Attendance(userList.get(1), timeSlotList.get(1), new Date()));
+		attendanceList.add(new Attendance(userList.get(5), timeSlotList.get(2), new Date()));
 
 		Users loggedInUser = login(userList);
-    if (loggedInUser == null) {
-        System.out.println("Login failed. Exiting.");
-        return;
-    }
+		if (loggedInUser == null) {
+			System.out.println("Login failed. Exiting.");
+			return;
+		}
 
-    System.out.println("Login successful as " + loggedInUser.getUsername() + " (" + loggedInUser.getRole() + ").");
+		System.out.println("Login successful as " + loggedInUser.getUsername() + " (" + loggedInUser.getRole() + ").");
 
-    mainMenu(loggedInUser);
-}
-
-		// while (true) {
-		// option = Helper.readInt("Enter an option > ");
-		// try {
-		// if (loggedInUser.getRole().equals("S")) {
-		// StudentOption selectedOption = StudentOption.fromValue(option);
-
-		// if (selectedOption == StudentOption.QUIT) {
-		// System.out.println("Bye!");
-		// break;
-		// }
-		// System.out.println("Selected Option: " + selectedOption);
-		// // Rest of your handling logic for student options...
-		// } else if (loggedInUser.getRole().equals("T")) {
-		// TeacherOption selectedOption = TeacherOption.fromValue(option);
-		// if (selectedOption == TeacherOption.QUIT) {
-		// System.out.println("Bye!");
-		// break;
-		// }
-		// System.out.println("Selected Option: " + selectedOption);
-		// // Rest of your handling logic for teacher options...
-		// } else if (loggedInUser.getRole().equals("A")) {
-		// AdminOption selectedOption = AdminOption.fromValue(option);
-		// if (selectedOption == AdminOption.QUIT) {
-		// System.out.println("Bye!");
-		// break;
-		// }
-		// System.out.println("Selected Option: " + selectedOption);
-		// // Rest of your handling logic for admin options...
-		// } else if (loggedInUser.getRole().equals("Global")) {
-		// GlobalOption selectedOption = GlobalOption.fromValue(option);
-		// if (selectedOption == GlobalOption.QUIT) {
-		// System.out.println("Bye!");
-		// break;
-		// }
-		// System.out.println("Selected Option: " + selectedOption);
-		// // Rest of your handling logic for global options...
-		// } else {
-		// System.out.println("Invalid role.");
-		// break;
-		// }
-
-		// } catch (IllegalArgumentException e) {
-		// System.out.println("Invalid option. Please enter a valid option number.");
-		// }
-		// }
-
-		// int option = -1;
-
-		// while (option != GlobalOption.QUIT.getValue() && option !=
-		// StudentOption.QUIT.getValue()
-		// && option != TeacherOption.QUIT.getValue() && option !=
-		// AdminOption.QUIT.getValue()) {
-		// option = Helper.readInt("Enter an option > ");
-		// try {
-		// GlobalOption selectedOption = GlobalOption.fromValue(option);
-		// // StudentOption selectedOption = StudentOption.fromValue(option);
-		// // TeacherOption selectedOption = TeacherOption.fromValue(option);
-		// // AdminOption selectedOption = AdminOption.fromValue(option);
-		// System.out.println("Selected Option: " + selectedOption);
-		// System.out.println("Logged-in user role: " + loggedInUser.getRole());
-
-		// if (!selectedOption.isAllowedForRole(loggedInUser.getRole())) {
-		// System.out.println("You do not have permission for this option.");
-		// continue;
-		// }
-
-		// switch (loggedInUser.getRole()) {
-		// case "S":
-		// handleStudentOption(selectedOption);
-		// break;
-		// case "T":
-		// handleTeacherOption(selectedOption);
-		// break;
-		// case "A":
-		// handleAdminOption(selectedOption);
-		// break;
-		// case "Global":
-		// handleGlobalOption(selectedOption);
-		// break;
-		// default:
-		// System.out.println("Invalid role.");
-		// break;
-		// }
-
-		// } catch (IllegalArgumentException e) {
-		// System.out.println("Invalid option. Please enter a valid option number.");
-		// }
-		// }
-
-	
-
-	
+		mainMenu(loggedInUser);
+	}
 
 	private static void displayMenu(String role) {
 		switch (role) {
@@ -562,18 +482,39 @@ public class C206_CaseStudy {
 		System.out.println("DELETE USER");
 		String studentIdToDelete = Helper.readString("\nEnter student ID: ");
 
-		boolean executeDelete = false;
+		boolean foundUser = false;
 
 		for (Users user : userList) {
 			if (user.getStudentId().equalsIgnoreCase(studentIdToDelete)) {
-				executeDelete = true;
+				foundUser = true;
+
+				// Remove related registrations
+				List<Registration> registrationsToRemove = new ArrayList<>();
+				for (Registration registration : registrationList) {
+					if (registration.getUser().equals(user)) {
+						Activity registeredActivity = registration.getActivity();
+						registeredActivity.increaseCapacity();
+						registrationsToRemove.add(registration);
+					}
+				}
+				registrationList.removeAll(registrationsToRemove);
+
+				// Remove related attendance
+				List<Attendance> attendanceToRemove = new ArrayList<>();
+				for (Attendance attendance : attendanceList) {
+					if (attendance.getUser().equals(user)) {
+						attendanceToRemove.add(attendance);
+					}
+				}
+				attendanceList.removeAll(attendanceToRemove);
+
+				// Remove the user
 				userList.remove(user);
 				System.out.println("User deleted successfully!");
 				break;
 			}
 		}
-
-		if (!executeDelete) {
+		if (!foundUser) {
 			System.out.println("User with the given student ID not found.");
 		}
 	}
@@ -629,6 +570,7 @@ public class C206_CaseStudy {
 
 		if (activityList.isEmpty()) {
 			System.out.println("No activities found.");
+			return;
 		}
 
 		System.out.println("All Activities:");
@@ -644,24 +586,34 @@ public class C206_CaseStudy {
 
 		int activityIdToDelete = Helper.readInt("Delete activity(ID): ");
 
-		boolean executeDelete = false;
-
+		Activity activityToDelete = null;
 		for (Activity activity : activityList) {
 			if (activity.getActivityId() == activityIdToDelete) {
-				executeDelete = true;
-				activityList.remove(activity);
-
-				// Remove time slots associated with the deleted activity
-				timeSlotList.removeIf(timeSlot -> timeSlot.getActivity().equals(activity));
-
-				System.out.println("Activity with ID " + activityIdToDelete + " has been deleted.");
+				activityToDelete = activity;
 				break;
 			}
 		}
 
-		if (!executeDelete) {
+		if (activityToDelete == null) {
 			System.out.println("Invalid activity ID.");
+			return;
 		}
+
+		final Activity finalActivityToDelete = activityToDelete; // Capture a final reference
+
+		// Remove registrations of the deleted activity
+		registrationList.removeIf(registration -> registration.getActivity().equals(finalActivityToDelete));
+
+		// Remove time slots associated with the deleted activity
+		timeSlotList.removeIf(timeSlot -> timeSlot.getActivity().equals(finalActivityToDelete));
+
+		// Remove attendance records associated with the deleted activity
+		attendanceList.removeIf(attendance -> attendance.getTimeSlot().getActivity().equals(finalActivityToDelete));
+
+		// remove the activity from the list
+		activityList.remove(finalActivityToDelete);
+
+		System.out.println("Activity with ID " + activityIdToDelete + " has been deleted.");
 	}
 
 	private static void addRegistration() {
@@ -869,6 +821,70 @@ public class C206_CaseStudy {
 		return null; // Return null if the activity with the specified ID is not found
 	}
 
+	private static void updateRegistrationStatus() {
+		System.out.println("------------------------");
+		System.out.println("Update Registration Status");
+		System.out.println("------------------------");
+
+		// Check if there are any registrations to update
+		if (registrationList.isEmpty()) {
+			System.out.println("No registrations found.");
+			return;
+		}
+
+		// Display all registrations with their IDs
+		System.out.println("All Registrations:");
+		System.out.println(String.format("%-5s %-15s %-30s %-20s", "Reg. ID", "User", "Activity", "Status"));
+		System.out.println("--------------------------------------------------------------------------------");
+		for (int i = 0; i < registrationList.size(); i++) {
+			Registration registration = registrationList.get(i);
+			System.out.println(String.format("%-5s %-15s %-30s %-20s ",
+					registration.getRegistrationId(),
+					registration.getUser().getName(),
+					registration.getActivity().getActivityName(),
+					registration.getStatus()));
+		}
+		System.out.println("--------------------------------------------------------------------------------");
+
+		// Prompt the user to enter the ID of the registration they want to update
+		int registrationIdToUpdate = Helper.readInt("Enter the ID of the registration to update: ");
+
+		// Check if the entered ID is valid
+		if (registrationIdToUpdate <= 0 || registrationIdToUpdate > registrationList.size()) {
+			System.out.println("Invalid registration ID.");
+			return;
+		}
+
+		// Find the registration with the entered ID
+		Registration selectedRegistration = registrationList.get(registrationIdToUpdate - 1);
+
+		// Display available approval statuses
+		System.out.println("Available Approval Statuses:");
+		for (int i = 0; i < approvalStatusList.size(); i++) {
+			ApprovalStatus approvalStatus = approvalStatusList.get(i);
+			System.out.println(String.format("%-5s %-20s", (i + 1), approvalStatus.getStatus()));
+		}
+
+		// Prompt the user to select an approval status
+		int selectedApprovalStatusId = Helper.readInt("Enter the ID of the approval status to set: ");
+
+		// Check if the entered ID is valid
+		if (selectedApprovalStatusId <= 0 || selectedApprovalStatusId > approvalStatusList.size()) {
+			System.out.println("Invalid approval status ID.");
+			return;
+		}
+
+		// Update the registration's approval status
+		selectedRegistration.setStatus(approvalStatusList.get(selectedApprovalStatusId - 1).getStatus());
+		System.out.println("Registration status updated successfully!");
+
+		if (selectedRegistration.getStatus().equalsIgnoreCase("Approved")) {
+			Activity selectedActivity = selectedRegistration.getActivity();
+			selectedActivity.reduceCapacity();
+			System.out.println("Activity capacity reduced by one.");
+		}
+	}
+
 	private static void addTimeSlot() {
 		System.out.println("------------------------");
 		System.out.println("Add New Time Slot");
@@ -929,20 +945,22 @@ public class C206_CaseStudy {
 	}
 
 	private static void viewTimeSlots() {
-		System.out.println("------------------------");
+		System.out.println("-".repeat(100));
 		System.out.println("View All Time Slots");
-		System.out.println("------------------------");
+		System.out.println("-".repeat(100));
 
 		if (timeSlotList.isEmpty()) {
 			System.out.println("No time slots found.");
 		} else {
 			System.out.println("Time Slots:");
-			System.out.println(String.format("%-5s %-15s %-10s", "ID", "Day", "Time"));
-			System.out.println("---------------------------");
+			System.out.println(
+					String.format("%-5s %-15s %-30s %-30s %-30s", "ID", "Day", "Start Time", "End Time", "Activity"));
+			System.out.println("-".repeat(100));
 			for (int i = 0; i < timeSlotList.size(); i++) {
 				TimeSlot timeSlot = timeSlotList.get(i);
-				System.out.println(String.format("%-5s %-15s %-10s", (i + 1), timeSlot.getDay(),
-						timeSlot.getStartTime() + " - " + timeSlot.getEndTime()));
+				String activityName = timeSlot.getActivity().getActivityName();
+				System.out.println(String.format("%-5s %-15s %-30s %-30s %-30s", (i + 1), timeSlot.getDay(),
+						timeSlot.getStartTime(), timeSlot.getEndTime(), activityName));
 			}
 		}
 	}
@@ -1030,12 +1048,8 @@ public class C206_CaseStudy {
 			return;
 		}
 
-		// Get check-in time
-		Date checkInTime = Helper.readDate("Enter check-in time (dd/MM/yyyy HH:mm): ");
-		if (checkInTime == null) {
-			System.out.println("Error: Invalid check-in time format. Attendance creation aborted.");
-			return;
-		}
+		// Set check-in time to the current time
+		Date checkInTime = new Date();
 
 		// Create a new Attendance object
 		Attendance newAttendance = new Attendance(selectedUser, selectedTimeSlot, checkInTime);
@@ -1055,21 +1069,18 @@ public class C206_CaseStudy {
 			System.out.println("No attendance records found.");
 		} else {
 			System.out.println("Attendance Records:");
-			System.out.println(String.format("%-5s %-15s %-25s %-20s %-20s", "ID", "User", "Time Slot", "Check-in Time",
-					"Check-out Time"));
-			System.out.println("------------------------------------------------------------");
+			System.out.println(
+					String.format("%-5s %-15s %-20s %-20s", "ID", "User", "Check-in Time", "Attendance Status"));
+			System.out.println("--------------------------------------------------");
 			for (Attendance attendance : attendanceList) {
 				int attendanceId = attendance.getAttendanceId();
 				String userName = attendance.getUser().getName();
-				int timeSlotId = attendance.getTimeSlot().getTimeSlotId();
-				Date checkInTime = attendance.getCheckInTime();
-				Date checkOutTime = attendance.getCheckOutTime();
+				String checkInTime = (attendance.getCheckInTime() != null) ? attendance.getCheckInTime().toString()
+						: "N/A";
+				String attendanceStatus = attendance.getAttendanceStatus();
 
-				String checkInTimeString = (checkInTime != null) ? checkInTime.toString() : "N/A";
-				String checkOutTimeString = (checkOutTime != null) ? checkOutTime.toString() : "N/A";
-
-				System.out.println(String.format("%-5s %-15s %-25s %-20s %-20s", attendanceId, userName, timeSlotId,
-						checkInTimeString, checkOutTimeString));
+				System.out.println(
+						String.format("%-5s %-15s %-20s %-20s", attendanceId, userName, checkInTime, attendanceStatus));
 			}
 		}
 	}

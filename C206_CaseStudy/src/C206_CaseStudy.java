@@ -364,7 +364,6 @@ public class C206_CaseStudy {
 		registrationList.add(new Registration(userList.get(0), activityList.get(0), "Pending"));
 		registrationList.add(new Registration(userList.get(1), activityList.get(1), "Approved"));
 		registrationList.add(new Registration(userList.get(2), activityList.get(2), "Approved"));
-		
 
 		approvalStatusList.add(new ApprovalStatus("Pending"));
 		approvalStatusList.add(new ApprovalStatus("Approved"));
@@ -1070,25 +1069,18 @@ public class C206_CaseStudy {
 			System.out.println("No attendance records found.");
 		} else {
 			System.out.println("Attendance Records:");
-			System.out.println(String.format("%-5s %-15s %-15s %-15s %-25s %-20s %-20s",
-					"ID", "User", "Time Slot ID", "Activity", "Check-in Time", "Check-out Time", "Attendance Status"));
 			System.out.println(
-					"------------------------------------------------------------------------------------------------------------");
+					String.format("%-5s %-15s %-20s %-20s", "ID", "User", "Check-in Time", "Attendance Status"));
+			System.out.println("--------------------------------------------------");
 			for (Attendance attendance : attendanceList) {
 				int attendanceId = attendance.getAttendanceId();
 				String userName = attendance.getUser().getName();
-				int timeSlotId = attendance.getTimeSlot().getTimeSlotId();
-				String activityName = attendance.getTimeSlot().getActivity().getActivityName();
-				Date checkInTime = attendance.getCheckInTime();
-				Date checkOutTime = attendance.getCheckOutTime();
+				String checkInTime = (attendance.getCheckInTime() != null) ? attendance.getCheckInTime().toString()
+						: "N/A";
 				String attendanceStatus = attendance.getAttendanceStatus();
 
-				String checkInTimeString = (checkInTime != null) ? checkInTime.toString() : "N/A";
-				String checkOutTimeString = (checkOutTime != null) ? checkOutTime.toString() : "N/A";
-
-				System.out.println(String.format("%-5s %-15s %-15s %-15s %-25s %-20s %-20s",
-						attendanceId, userName, timeSlotId, activityName, checkInTimeString, checkOutTimeString,
-						attendanceStatus));
+				System.out.println(
+						String.format("%-5s %-15s %-20s %-20s", attendanceId, userName, checkInTime, attendanceStatus));
 			}
 		}
 	}

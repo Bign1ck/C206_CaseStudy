@@ -445,7 +445,7 @@ public class C206_CaseStudy {
 	// ------------------------------------------------------------------------------------------------------------------------
 	// ------------------------------------------------------------------------------------------------------------------------
 
-	private static void addUser() {
+	public static void addUser() {
 		System.out.println("ADD NEW USER");
 		String name = Helper.readString("Enter username: ");
 		String userId = Helper.readString("Enter userID: ");
@@ -470,7 +470,7 @@ public class C206_CaseStudy {
 
 	}
 
-	private static void viewUsers() {
+	public static void viewUsers() {
 		System.out.println("-".repeat(80));
 		System.out.println("USERS LIST");
 		System.out.println("-".repeat(80));
@@ -486,7 +486,7 @@ public class C206_CaseStudy {
 		}
 	}
 
-	private static void deleteUser() {
+	public static void deleteUser() {
 		viewUsers();
 		System.out.println("DELETE USER");
 		String studentIdToDelete = Helper.readString("\nEnter student ID: ");

@@ -2,7 +2,7 @@ import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
         registrationList = new ArrayList<>();
         approvalStatusList = new ArrayList<>();
 
-        Users user1 = new Users("John Doe", "123456", null, null);
+        Users user1 = new Users("John Doe", "123456", "S_john_doe", "S");
         userList.add(user1);
 
         Users user2 = new Users("Jane Smith", "789012", "T_jane_smith", "T");
@@ -47,51 +47,42 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
 
     @Test
     public void testAddUser() {
-        // Assuming the addUser method is part of C206_CaseStudy class and works as
-        // expected
-        // C206_CaseStudy.addUser(userList, "John Doe", "12345", "S_john_doe", "S");
+        String simulatedInput = "John Doe\n123456\nS\n";
+        InputStream savedSystemIn = System.in;
+        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
 
-        // Assertions for checking the added user's details
-        assertEquals(2, userList.size()); // Assuming the setup added 2 users
-        assertEquals("Jane Smith", userList.get(1).getName());
-        assertEquals("789012", userList.get(1).getStudentId());
-        assertEquals("T_jane_smith", userList.get(1).getUsername());
-        assertEquals("T", userList.get(1).getRole());
+        // Call the addUser method
+        addUser();
+
+        // Reset System.in to its original state
+        System.setIn(savedSystemIn);
+
+        // Verify the expected behavior
+        assertEquals(2, userList.size());
+
+        Users addedUser = userList.get(0);
+        assertEquals("John Doe", addedUser.getName());
+        assertEquals("123456", addedUser.getStudentId());
+        assertEquals("S", addedUser.getRole());
     }
 
     @Test
     public void testViewUsersEmpty() {
-        
-
-        // Assert that the printed output matches the expected message for empty userList
-        String expectedOutput = "-".repeat(80) + "\n" +
-                "USERS LIST\n" +
-                "-".repeat(80) + "\n" +
-                "No users found.\n" +
-                "-".repeat(80) + "\n";
-
-        assertEquals(expectedOutput, outContent.toString());
-    }
-
-
-    @Test
-    public void testViewUsersNonEmpty() {
-        // Capture the output
-        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outputStreamCaptor));
+        // Redirect System.out to capture output
+        System.setOut(new PrintStream(outContent));
 
         // Call the viewUsers method
-        // C206_CaseStudy.viewUsers(userList);
+        viewUsers();
 
-        // Verify the output (This should show user list details if userList is
-        // populated)
-        String expectedOutput = "--------------------------------------------------------------------------------\n" +
-                "USERS LIST\n" +
-                "--------------------------------------------------------------------------------\n" +
-                "No users found.\n" +
-                "--------------------------------------------------------------------------------";
-        assertEquals(expectedOutput, outputStreamCaptor.toString().trim());
+        // Verify the expected output
+        assertEquals("-".repeat(80) + System.lineSeparator() +
+                "USERS LIST" + System.lineSeparator() +
+                "-".repeat(80) + System.lineSeparator() +
+                "No users found." + System.lineSeparator() +
+                "-".repeat(80) + System.lineSeparator(), outContent.toString());
     }
+
+   
 
     @Test
     public void testDeleteUser() {
@@ -128,60 +119,81 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
         // Assuming the addActivity method is part of C206_CaseStudy class
         activityList.add(new Activity(activityName, capacity, prerequisites));
 
-    		// Assert that the activityList has one item (the activity added)
-    		assertEquals(1, activityList.size());
-    		// Assert that the activity details are as expected
-    		assertEquals(activityName, activityList.get(0).getActivityName());
-    		assertEquals(capacity, activityList.get(0).getCapacity());
-    		assertEquals(prerequisites, activityList.get(0).getPrerequisites());
-		}
-	
+        // Assert that the activityList has one item (the activity added)
+        assertEquals(1, activityList.size());
+        // Assert that the activity details are as expected
+        assertEquals(activityName, activityList.get(0).getActivityName());
+        assertEquals(capacity, activityList.get(0).getCapacity());
+        assertEquals(prerequisites, activityList.get(0).getPrerequisites());
+    }
 
-		@Test
-		public void testViewActivitiesEmpty() {
-			 // Capture the output
-			 ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-			 System.setOut(new PrintStream(outputStreamCaptor));
-		 
-			 // Call the viewActivities method
-			 //C206_CaseStudy.viewActivities(activityList);
-		 
-			 // Verify the output
-			 String expectedOutput = "No activities found.";
-			 assertEquals(expectedOutput, outputStreamCaptor.toString().trim());
-		}
-	
-		@Test
-		public void testViewActivitiesNonEmpty() {
-			// Prepare sample data
-			activityList.add(new Activity("Activity 1", 10, "Prereq 1"));
-			activityList.add(new Activity("Activity 2", 15, "Prereq 2"));
-		
-			// Capture the output
-			ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-			System.setOut(new PrintStream(outputStreamCaptor));
-		
+    @Test
+public void testViewActivitiesEmpty() {
+    // Redirect System.out to capture output
+    ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outputStreamCaptor));
 
-	
-			//Assert.assertTrue(Helper.getOutput().contains("ID       Activity Name   Capacity  Prerequisites"));
-			//Assert.assertTrue(Helper.getOutput().contains("1        Activity 1      10        Prereq 1"));
-			//Assert.assertTrue(Helper.getOutput().contains("2        Activity 2      15        Prereq 2"));
-		}
-	
+    // Call the viewActivities method with an empty activity list
+    viewActivities();
 
-		public void testDeleteActivity() {
-			// Prepare sample activities
-			Activity activity1 = new Activity("Swimming", 20, "Swimming goggles");
-			Activity activity2 = new Activity("Yoga", 15, "Yoga mat");
-			activityList.add(activity1);
-			activityList.add(activity2);
-		
-			// Assuming deleteActivity method is part of C206_CaseStudy class
-			//C206_CaseStudy.deleteActivity(activityList, 1); // Deleting by index or ID, based on implementation
-		
-			// Check if activity with index or ID 1 has been deleted
-			assertFalse("Activity has been deleted", activityList.contains(activity1));
-		}
+    // Reset System.out to its original state
+    System.setOut(originalOut);
+
+    // Verify the output
+    String expectedOutput = "-".repeat(24) + System.lineSeparator() +
+            "View All Activities" + System.lineSeparator() +
+            "-".repeat(24) + System.lineSeparator() +
+            "No activities found.";
+
+    assertEquals(expectedOutput, outputStreamCaptor.toString().trim());
+}
+
+
+@Test
+public void testViewActivitiesNonEmpty() {
+    // Prepare sample data for activityList
+    activityList.add(new Activity("Activity 1", 10, "Prereq 1"));
+    activityList.add(new Activity("Activity 2", 15, "Prereq 2"));
+
+    // Redirect System.out to capture output
+    ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outputStreamCaptor));
+
+    // Call the viewActivities method with non-empty activity list
+    viewActivities();
+
+    // Reset System.out to its original state
+    System.setOut(originalOut);
+
+    // Construct the expected output
+    StringBuilder expectedOutput = new StringBuilder();
+    expectedOutput.append("-".repeat(24)).append(System.lineSeparator());
+    expectedOutput.append("View All Activities").append(System.lineSeparator());
+    expectedOutput.append("-".repeat(24)).append(System.lineSeparator());
+    expectedOutput.append(String.format("%-5s %-15s %-10s %-30s%n", "ID", "Activity Name", "Capacity", "Prerequisites"));
+    expectedOutput.append("-".repeat(51)).append(System.lineSeparator());
+    expectedOutput.append(String.format("%-5s %-15s %-10s %-30s%n", 1, "Activity 1", 10, "Prereq 1"));
+    expectedOutput.append(String.format("%-5s %-15s %-10s %-30s%n", 2, "Activity 2", 15, "Prereq 2"));
+
+    // Verify the output
+    assertEquals(expectedOutput.toString(), outputStreamCaptor.toString());
+}
+
+
+    public void testDeleteActivity() {
+        // Prepare sample activities
+        Activity activity1 = new Activity("Swimming", 20, "Swimming goggles");
+        Activity activity2 = new Activity("Yoga", 15, "Yoga mat");
+        activityList.add(activity1);
+        activityList.add(activity2);
+
+        // Assuming deleteActivity method is part of C206_CaseStudy class
+        // C206_CaseStudy.deleteActivity(activityList, 1); // Deleting by index or ID,
+        // based on implementation
+
+        // Check if activity with index or ID 1 has been deleted
+        assertFalse("Activity has been deleted", activityList.contains(activity1));
+    }
 
     // ------------------------------------------------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------------------------

@@ -270,4 +270,27 @@ public class Helper {
     return getDay(one) == getDay(two) && getMonth(one) == getMonth(two)
         && getYear(one) == getYear(two);
   }
+
+  private static String simulatedInput = null;
+  private static StringBuilder simulatedOutput = new StringBuilder();
+
+  public static void setInputForTesting(String input) {
+    simulatedInput = input;
+    scan = new Scanner(simulatedInput);
+  }
+
+  public static void resetTestingInput() {
+    simulatedInput = null;
+    scan = new Scanner(System.in); // Reset to standard input
+  }
+
+  public static String getOutputForTesting() {
+    String output = simulatedOutput.toString();
+    simulatedOutput.setLength(0); // Clear the buffer
+    return output;
+  }
+
+  public static void printToSimulatedOutput(String message) {
+    simulatedOutput.append(message).append("\n");
+  }
 }

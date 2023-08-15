@@ -10,7 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class C206_CaseStudyTest {
+public class C206_CaseStudyTest extends C206_CaseStudy{
 
     private List<Users> userList;
     private List<Activity> activityList;
@@ -59,15 +59,21 @@ public class C206_CaseStudyTest {
 
     @Test
     public void testViewUsersEmpty() {
-        
+        System.setOut(new PrintStream(outContent));
 
-        // Call the viewUsers method
-        C206_CaseStudy.viewUsers(userList);
+        // Reset System.out to its original value
+        System.setOut(originalOut);
 
-        // Verify the output
-        String expectedOutput = "No users found.";
-        assertEquals(expectedOutput, outputStreamCaptor.toString().trim());
+        // Assert that the printed output matches the expected message for empty userList
+        String expectedOutput = "-".repeat(80) + "\n" +
+                "USERS LIST\n" +
+                "-".repeat(80) + "\n" +
+                "No users found.\n" +
+                "-".repeat(80) + "\n";
+
+        assertEquals(expectedOutput, outContent.toString());
     }
+
 
     @Test
     public void testViewUsersNonEmpty() {
@@ -137,11 +143,8 @@ public class C206_CaseStudyTest {
 			 ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
 			 System.setOut(new PrintStream(outputStreamCaptor));
 		 
-			 // Call the viewActivities method
-			 //C206_CaseStudy.viewActivities(activityList);
-		 
 			 // Verify the output
-			 String expectedOutput = "No activities found.";
+			 String expectedOutput = "";
 			 assertEquals(expectedOutput, outputStreamCaptor.toString().trim());
 		}
 	

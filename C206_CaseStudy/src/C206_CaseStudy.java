@@ -172,15 +172,19 @@ public class C206_CaseStudy {
 				switch (loggedInUser.getRole()) {
 					case "S":
 						handleStudentOption(loggedInUser, StudentOption.fromValue(option));
+						displayStudentMenu();
 						break;
 					case "T":
 						handleTeacherOption(loggedInUser, TeacherOption.fromValue(option));
+						displayTeacherMenu();
 						break;
 					case "A":
 						handleAdminOption(loggedInUser, AdminOption.fromValue(option));
+						displayAdminMenu();
 						break;
 					case "Global":
 						handleGlobalOption(loggedInUser, GlobalOption.fromValue(option));
+						displayGlobalMenu();
 						break;
 					default:
 						System.out.println("Invalid role.");
@@ -277,6 +281,7 @@ public class C206_CaseStudy {
 		switch (selectedOption) {
 			case ADD_USER:
 				addUser();
+				
 				break;
 			case VIEW_USERS:
 				viewUsers();
@@ -542,7 +547,7 @@ public class C206_CaseStudy {
 		System.out.println("Activity added successfully!");
 	}
 
-	private static void viewActivities() {
+	public static void viewActivities() {
 		System.out.println("-".repeat(24));
 		System.out.println("View All Activities");
 		System.out.println("-".repeat(24));
@@ -630,7 +635,6 @@ public class C206_CaseStudy {
 			return;
 		}
 
-		viewUsers();
 		String userId = Helper.readString("Enter the student's ID for registration: ");
 		Users selectedUser = null;
 

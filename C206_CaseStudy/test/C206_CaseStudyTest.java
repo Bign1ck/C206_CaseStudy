@@ -2,6 +2,7 @@ import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,13 +11,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class C206_CaseStudyTest extends C206_CaseStudy{
+public class C206_CaseStudyTest extends C206_CaseStudy {
 
     private List<Users> userList;
     private List<Activity> activityList;
     private List<Registration> registrationList;
     private List<ApprovalStatus> approvalStatusList;
-	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
     private final ByteArrayInputStream mockInput = new ByteArrayInputStream("1\n".getBytes());
 
@@ -46,8 +47,9 @@ public class C206_CaseStudyTest extends C206_CaseStudy{
 
     @Test
     public void testAddUser() {
-        // Assuming the addUser method is part of C206_CaseStudy class and works as expected
-        //C206_CaseStudy.addUser(userList, "John Doe", "12345", "S_john_doe", "S");
+        // Assuming the addUser method is part of C206_CaseStudy class and works as
+        // expected
+        // C206_CaseStudy.addUser(userList, "John Doe", "12345", "S_john_doe", "S");
 
         // Assertions for checking the added user's details
         assertEquals(2, userList.size()); // Assuming the setup added 2 users
@@ -59,10 +61,7 @@ public class C206_CaseStudyTest extends C206_CaseStudy{
 
     @Test
     public void testViewUsersEmpty() {
-        System.setOut(new PrintStream(outContent));
-
-        // Reset System.out to its original value
-        System.setOut(originalOut);
+        
 
         // Assert that the printed output matches the expected message for empty userList
         String expectedOutput = "-".repeat(80) + "\n" +
@@ -82,14 +81,15 @@ public class C206_CaseStudyTest extends C206_CaseStudy{
         System.setOut(new PrintStream(outputStreamCaptor));
 
         // Call the viewUsers method
-        //C206_CaseStudy.viewUsers(userList);
+        // C206_CaseStudy.viewUsers(userList);
 
-        // Verify the output (This should show user list details if userList is populated)
+        // Verify the output (This should show user list details if userList is
+        // populated)
         String expectedOutput = "--------------------------------------------------------------------------------\n" +
-                                "USERS LIST\n" +
-                                "--------------------------------------------------------------------------------\n" +
-                                "No users found.\n" +
-                                "--------------------------------------------------------------------------------";
+                "USERS LIST\n" +
+                "--------------------------------------------------------------------------------\n" +
+                "No users found.\n" +
+                "--------------------------------------------------------------------------------";
         assertEquals(expectedOutput, outputStreamCaptor.toString().trim());
     }
 
@@ -115,18 +115,18 @@ public class C206_CaseStudyTest extends C206_CaseStudy{
         assertFalse("user has been deleted", deleted);
     }
 
-		//------------------------------------------------------------------------------------------------------------------------
-		//------------------------------------------------------------------------------------------------------------------------
-		//------------------------------------------------------------------------------------------------------------------------
-	
-		@Test
-		public void testAddActivity() {
-			String activityName = "Test Activity";
-    		int capacity = 10;
-    		String prerequisites = "Test Prerequisites";
+    // ------------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------------------------
 
-    		// Assuming the addActivity method is part of C206_CaseStudy class
-    		activityList.add(new Activity(activityName, capacity, prerequisites));
+    @Test
+    public void testAddActivity() {
+        String activityName = "Test Activity";
+        int capacity = 10;
+        String prerequisites = "Test Prerequisites";
+
+        // Assuming the addActivity method is part of C206_CaseStudy class
+        activityList.add(new Activity(activityName, capacity, prerequisites));
 
     		// Assert that the activityList has one item (the activity added)
     		assertEquals(1, activityList.size());
@@ -143,8 +143,11 @@ public class C206_CaseStudyTest extends C206_CaseStudy{
 			 ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
 			 System.setOut(new PrintStream(outputStreamCaptor));
 		 
+			 // Call the viewActivities method
+			 //C206_CaseStudy.viewActivities(activityList);
+		 
 			 // Verify the output
-			 String expectedOutput = "";
+			 String expectedOutput = "No activities found.";
 			 assertEquals(expectedOutput, outputStreamCaptor.toString().trim());
 		}
 	
@@ -180,31 +183,29 @@ public class C206_CaseStudyTest extends C206_CaseStudy{
 			assertFalse("Activity has been deleted", activityList.contains(activity1));
 		}
 
-		//------------------------------------------------------------------------------------------------------------------------------------
-		//-----------------------------------------------------------------------------------------------------------------------------------
-		//-----------------------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------------------------
 
-        @Test
-        public void testAddRegistration() {
-			// Create a test user and activity
-    		Users testUser = userList.get(0); // Use the first user for testing
-    		Activity testActivity = new Activity("Chess Club", 20);
-            registrationList.add(new Registration(testUser, testActivity, "Pending"));
+    @Test
+    public void testAddRegistration() {
+        // Create a test user and activity
+        Users testUser = userList.get(0); // Use the first user for testing
+        Activity testActivity = new Activity("Chess Club", 20);
+        registrationList.add(new Registration(testUser, testActivity, "Pending"));
 
-	
-			// Verify that the registration has been added successfully
-			assertEquals(1, registrationList.size());
-			Registration addedRegistration = registrationList.get(0);
-			assertEquals(testUser, addedRegistration.getUser());
-			assertEquals(testActivity, addedRegistration.getActivity());
-			assertEquals("Pending", addedRegistration.getStatus());
-			
-		 }
-	
+        // Verify that the registration has been added successfully
+        assertEquals(1, registrationList.size());
+        Registration addedRegistration = registrationList.get(0);
+        assertEquals(testUser, addedRegistration.getUser());
+        assertEquals(testActivity, addedRegistration.getActivity());
+        assertEquals("Pending", addedRegistration.getStatus());
 
-	@Test
-	public void testViewRegistrationsEmpty() {
-		// Test viewRegistrations() method when registrationList is empty
+    }
+
+    @Test
+    public void testViewRegistrationsEmpty() {
+        // Test viewRegistrations() method when registrationList is empty
         System.setOut(new PrintStream(outContent));
 
         // Call the viewRegistrations() method
@@ -218,9 +219,9 @@ public class C206_CaseStudyTest extends C206_CaseStudy{
         assertEquals(expectedOutput, outContent.toString());
     }
 
-	@Test
-	public void testViewRegistrationsNonEmpty() {
-		// Prepare sample data for registrationList
+    @Test
+    public void testViewRegistrationsNonEmpty() {
+        // Prepare sample data for registrationList
         Users user = new Users("John Doe", "123456", null, null);
         Activity activity = new Activity("Chess Club", 20);
         Registration registration = new Registration(user, activity, "Pending");
@@ -239,13 +240,15 @@ public class C206_CaseStudyTest extends C206_CaseStudy{
         String expectedOutput = "--------------------------------------------------------------------------------\n" +
                 "Registration ID  User                           Activity            Status         \n" +
                 "--------------------------------------------------------------------------------\n" +
-                String.format("%-15s %-30s %-20s %-15s%n", registration.getRegistrationId(), user.getName(), activity.getActivityName(), registration.getStatus()) +
+                String.format("%-15s %-30s %-20s %-15s%n", registration.getRegistrationId(), user.getName(),
+                        activity.getActivityName(), registration.getStatus())
+                +
                 "--------------------------------------------------------------------------------\n";
         assertEquals(expectedOutput, outContent.toString());
     }
 
-	@Test
-	public void testDeleteRegistration() {
+    @Test
+    public void testDeleteRegistration() {
         // Prepare sample data for registrationList
         Users user = new Users("John Doe", "123456", null, null);
         Activity activity = new Activity("Chess Club", 20);
@@ -272,7 +275,9 @@ public class C206_CaseStudyTest extends C206_CaseStudy{
                 "All Registrations:\n" +
                 "Reg. ID User                           Activity            Status             \n" +
                 "--------------------------------------------------------------------------------\n" +
-                String.format("%-5s %-15s %-30s %-20s ", registration.getRegistrationId(), user.getName(), activity.getActivityName(), registration.getStatus()) +
+                String.format("%-5s %-15s %-30s %-20s ", registration.getRegistrationId(), user.getName(),
+                        activity.getActivityName(), registration.getStatus())
+                +
                 "\n--------------------------------------------------------------------------------\n" +
                 "Enter the ID of the registration to delete: " +
                 "Registration with ID 1 has been deleted.\n";
@@ -281,13 +286,13 @@ public class C206_CaseStudyTest extends C206_CaseStudy{
         assertEquals(0, registrationList.size()); // Check that the registration was removed from the list
     }
 
-	//-----------------------------------------------------------------------------------------------------------------------------------
-	//-----------------------------------------------------------------------------------------------------------------------------------
-	//-----------------------------------------------------------------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------------------------
 
-	@Test
-	public void testAddApprovalStatus() {
-		System.setOut(new PrintStream(outContent));
+    @Test
+    public void testAddApprovalStatus() {
+        System.setOut(new PrintStream(outContent));
 
         // Redirect user input to simulate providing the approval status name
         Helper.setInputForTesting("Pending\n");
@@ -312,9 +317,9 @@ public class C206_CaseStudyTest extends C206_CaseStudy{
         assertEquals("Pending", approvalStatusList.get(0).getStatus());
     }
 
-	@Test
-	public void testViewApprovalStatusesEmpty() {
-		System.setOut(new PrintStream(outContent));
+    @Test
+    public void testViewApprovalStatusesEmpty() {
+        System.setOut(new PrintStream(outContent));
 
         // Call the viewApprovalStatuses() method when approvalStatusList is empty
         testViewApprovalStatusesEmpty();
@@ -330,12 +335,10 @@ public class C206_CaseStudyTest extends C206_CaseStudy{
         assertEquals(expectedOutput, outContent.toString());
     }
 
-	@Test
-	public void testViewApprovalStatusesNonEmpty() {
-		ApprovalStatus status1 = new ApprovalStatus("Pending");
-        ApprovalStatus status2 = new ApprovalStatus("Approved");
-        approvalStatusList.add(status1);
-        approvalStatusList.add(status2);
+    @Test
+    public void testViewApprovalStatusesNonEmpty() {
+        approvalStatusList.add(new ApprovalStatus("Pending"));
+        approvalStatusList.add(new ApprovalStatus("Approved"));
 
         // Redirect System.out to outContent for capturing printed output
         System.setOut(new PrintStream(outContent));
@@ -359,9 +362,9 @@ public class C206_CaseStudyTest extends C206_CaseStudy{
         assertEquals(expectedOutput, outContent.toString());
     }
 
-	@Test
-	public void testDeleteApprovalStatus() {
-		// Prepare sample approval statuses
+    @Test
+    public void testDeleteApprovalStatus() {
+        // Prepare sample approval statuses
         ApprovalStatus status1 = new ApprovalStatus("Pending");
         ApprovalStatus status2 = new ApprovalStatus("Approved");
         approvalStatusList.add(status1);

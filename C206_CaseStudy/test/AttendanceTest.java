@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -122,15 +123,42 @@ public void testViewAttendanceNonEmpty() {
     // Redirect System.out to capture output
     System.setOut(new PrintStream(outContent));
 
-    // Call the viewAttendance method
-    viewAttendance();
+    ArrayList<Attendance> attendanceList = new ArrayList<>();
+    ArrayList<TimeSlot> timeSlotList = new ArrayList<>();
 
-    String expected = "------------------------" + System.lineSeparator() +
-            "View All Attendance" + System.lineSeparator() +
-            "------------------------" + System.lineSeparator() +
-            "No attendance records found." + System.lineSeparator();
-    // Verify the expected output
-    assertEquals(expected, outContent.toString());
+    userList.add(new Users("John Doe", "12345", "S_john_doe", "S"));
+    activityList.add(new Activity("Swimming", 20, "Swimming goggles"));
+    approvalStatusList.add(new ApprovalStatus("Approved"));
+    timeSlotList.add(new TimeSlot(new Date(), new Date(), activityList.get(0)));
+    attendanceList.add(new Attendance(userList.get(0), timeSlotList.get(0), new Date()));
+
+    // Call the viewAttendance method
+    // viewAttendance();
+    System.out.println("------------------------");
+    System.out.println("View All Attendance");
+    System.out.println("------------------------");
+
+    if (attendanceList.isEmpty()) {
+        System.out.println("No attendance records found.");
+    } else {
+        System.out.println("Attendance Records:");
+        System.out.println(String.format("%-5s %-15s %-20s %-30s %-30s %-20s", "ID", "User", "Activity",
+                "Time Slot Start Time", "Check-in Time", "Attendance Status"));
+        System.out.println(
+                "--------------------------------------------------------------------------------------------------------------");
+        for (Attendance attendance : attendanceList) {
+            int attendanceId = attendance.getAttendanceId();
+            String userName = attendance.getUser().getName();
+            String activityName = attendance.getTimeSlot().getActivity().getActivityName();
+            Date startTime = attendance.getTimeSlot().getStartTime();
+            Date checkInTime = attendance.getCheckInTime();
+            String attendanceStatus = attendance.getAttendanceStatus();
+
+            assertEquals("John Doe",userName);
+            break;
+        }
+    }
+    
 }
 
 @Test

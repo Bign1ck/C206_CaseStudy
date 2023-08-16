@@ -1084,7 +1084,7 @@ public class C206_CaseStudy {
 		}
 	}
 
-	private static void viewAttendance() {
+	public static void viewAttendance() {
 		System.out.println("------------------------");
 		System.out.println("View All Attendance");
 		System.out.println("------------------------");

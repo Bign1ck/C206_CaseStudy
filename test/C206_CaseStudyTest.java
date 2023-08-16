@@ -1,8 +1,7 @@
 import static org.junit.Assert.*;
-import java.util.Date;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 import org.junit.After;
 import org.junit.Before;
@@ -224,5 +223,5 @@ public class C206_CaseStudyTest {
         assertEquals(endTime, timeSlot.getEndTime());
         assertEquals(activity, timeSlot.getActivity());
     }
-	
+}
 }

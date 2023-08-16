@@ -1028,7 +1028,7 @@ public class C206_CaseStudy {
 		return null; // Time slot not found
 	}
 
-	private static void addAttendance() {
+	public static void addAttendance() {
 		System.out.println("------------------------");
 		System.out.println("Add New Attendance");
 		System.out.println("------------------------");

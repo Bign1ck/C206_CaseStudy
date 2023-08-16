@@ -1,114 +1,94 @@
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.junit.Before;    
-    
-public class AttendanceTest extends C206_CaseStudy{
-  private List<Users> userList;
-    private List<Activity> activityList;
-    private List<Registration> registrationList;
-    private List<ApprovalStatus> approvalStatusList;
-    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    private final PrintStream originalOut = System.out;
-    private final ByteArrayInputStream mockInput = new ByteArrayInputStream("1\n".getBytes());
-    
-    @Before
-    public void setup(){
-                // Initialize the lists before each test
-                userList = new ArrayList<>();
-                activityList = new ArrayList<>();
-                registrationList = new ArrayList<>();
-                approvalStatusList = new ArrayList<>();
-        
-                Users user1 = new Users("John Doe", "123456", "S_john_doe", "S");
-                userList.add(user1);
-        
-                Users user2 = new Users("Jane Smith", "789012", "T_jane_smith", "T");
-                userList.add(user2);
-    }
-        
-    @Test
-    public void testAddAttendance() {
-        int input_userID = 12345;
-        int input_timeSlotID = 1;
+import org.junit.After;
+import org.junit.Before;
 
-       ArrayList<Attendance> attendanceList = new ArrayList<>();
+public class AttendanceTest extends C206_CaseStudy {
+	private List<Users> userList;
+	private List<Activity> activityList;
+	private List<Registration> registrationList;
+	private List<ApprovalStatus> approvalStatusList;
+	private List<TimeSlot> timeSlotList;
+	private List<Attendance> attendanceList;
+	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+	private final PrintStream originalOut = System.out;
+	private final ByteArrayInputStream mockInput = new ByteArrayInputStream("1\n".getBytes());
 
-        
-        
-       System.out.println("------------------------");
-		System.out.println("Add New Attendance");
-		System.out.println("------------------------");
+	@Before
+	public void setup() {
+		// Initialize the lists before each test
+		userList = new ArrayList<>();
+		activityList = new ArrayList<>();
+		registrationList = new ArrayList<>();
+		approvalStatusList = new ArrayList<>();
+		timeSlotList = new ArrayList<>();
+		attendanceList = new ArrayList<>();
 
-		// Get user details
-		viewUsers();
-		Integer userId = input_userID;
-		Users selectedUser = getUserById(userId);
-		if (selectedUser == null) {
-			System.out.println("Error: User with the entered ID not found. Attendance creation aborted.");
-			return;
-		}
+		Users user1 = new Users("John Doe", "123456", "S_john_doe", "S");
+		userList.add(user1);
 
-		// Check if there are any time slots available
-		if (timeSlotList.isEmpty()) {
-			System.out.println("Error: No time slots found. Attendance creation aborted.");
-			return;
-		}
+		Users user2 = new Users("Jane Smith", "789012", "T_jane_smith", "T");
+		userList.add(user2);
+	}
 
-		// Get time slot details
-		viewTimeSlots();
-		int timeSlotId = Helper.readInt("Enter the ID of the time slot: ");
-		TimeSlot selectedTimeSlot = getTimeSlotById(timeSlotId);
-		if (selectedTimeSlot == null) {
-			System.out.println("Error: Time slot with the entered ID not found. Attendance creation aborted.");
-			return;
-		}
+	@Test
+	public void testAddAttendance() {
+		// Initialize necessary data for the test
+		userList.add(new Users("John Doe", "1234567", "S_john_doe", "S"));
+		timeSlotList.add(new TimeSlot(new Date(), new Date(), new Activity("Test Activity", 10, "Test Equipment")));
 
-		// Set check-in time to the current time
-		Date checkInTime = new Date();
+		// Redirect System.out to capture output
+		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(outContent));
 
-		// Check if an attendance already exists for the same user and time slot
-		Attendance existingAttendance = null;
-		for (Attendance attendance : attendanceList) {
-			if (attendance.getUser().equals(selectedUser) && attendance.getTimeSlot().equals(selectedTimeSlot)) {
-				existingAttendance = attendance;
-				break;
-			}
-		}
+		// Simulate user input for the test
+		String simulatedInput = "1\n1\n";
+		InputStream originalSystemIn = System.in;
+		System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
 
-		// If existing attendance is found, update the check-in time and status
-		if (existingAttendance != null) {
-			existingAttendance.setCheckInTime(checkInTime);
-			existingAttendance.setAttendanceStatus(existingAttendance.calculateAttendanceStatus());
-			System.out.println("Attendance updated successfully!");
-		} else {
-			// Create a new Attendance object
-			Attendance newAttendance = new Attendance(selectedUser, selectedTimeSlot, checkInTime);
+		// Call the addAttendance method
+		addAttendance();
 
-			// Add the new attendance record to the attendanceList
-			attendanceList.add(newAttendance);
-			System.out.println("Attendance added successfully!");
+		// Reset System.out and System.in to their original values
+		System.setOut(originalOut);
+		System.setIn(originalSystemIn);
 
-        assertEquals(input_checkInTime, input_timeSlotID, input_userID, input_timeSlotID);
-    }
-}
+		// Verify the expected output
+		String expectedOutput = "------------------------\r\n" +
+				"Add New Attendance\r\n" +
+				"------------------------\r\n" +
+				"--------------------------------------------------------------------------------\r\n" +
+				"USERS LIST\r\n" +
+				"--------------------------------------------------------------------------------\r\n" +
+				"No users found.\r\n" +
+				"--------------------------------------------------------------------------------\r\n" +
+				"Enter the ID of the user: Error: User with the entered ID not found. Attendance creation aborted.\r\n";
+		assertEquals(expectedOutput, outContent.toString());
 
-@Test
-public void testViewAttendanceEmpty() {
-    // Redirect System.out to capture output
-    System.setOut(new PrintStream(outContent));
+		// Verify that the attendance list is empty
+		assertTrue("attendance list is empty", attendanceList.isEmpty());
+	}
 
-    // Call the viewAttendance method
-    viewAttendance();
+	@Test
+	public void testViewAttendanceEmpty() {
+		// Redirect System.out to capture output
+		System.setOut(new PrintStream(outContent));
+
+		// Call the viewAttendance method
+		viewAttendance();
 
     String expected = "------------------------" + System.lineSeparator() +
             "View All Attendance" + System.lineSeparator() +
@@ -161,23 +141,23 @@ public void testViewAttendanceNonEmpty() {
     
 }
 
-@Test
-public void testDeleteAttendance() {
-    ArrayList<Users> userList = new ArrayList<>();
-    ArrayList<TimeSlot> timeSlotList = new ArrayList<>();
-    ArrayList<Activity> activityList = new ArrayList<>(); // Populate this list with actual activities
+	@Test
+	public void testDeleteAttendance() {
+		ArrayList<Users> userList = new ArrayList<>();
+		ArrayList<TimeSlot> timeSlotList = new ArrayList<>();
+		ArrayList<Activity> activityList = new ArrayList<>(); // Populate this list with actual activities
 
-    activityList.add(new Activity("Swimming", 20, "Swimming goggles"));
-    userList.add(new Users("Jane Smith", "98765", "T_jane_smith", "T"));
-    timeSlotList.add(new TimeSlot(new Date(), new Date(), activityList.get(0)));
-    ArrayList<Attendance> attendanceList = new ArrayList<>();
-    attendanceList.add(new Attendance(userList.get(0), timeSlotList.get(0), new Date()));
+		activityList.add(new Activity("Swimming", 20, "Swimming goggles"));
+		userList.add(new Users("Jane Smith", "98765", "T_jane_smith", "T"));
+		timeSlotList.add(new TimeSlot(new Date(), new Date(), activityList.get(0)));
+		ArrayList<Attendance> attendanceList = new ArrayList<>();
+		attendanceList.add(new Attendance(userList.get(0), timeSlotList.get(0), new Date()));
 
-    int IdToDelete = 1;
-    ByteArrayOutputStream output = new ByteArrayOutputStream();
-    System.setOut(new PrintStream(output));
+		int IdToDelete = 1;
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(output));
 
-    // Check if the entered ID is valid
+		// Check if the entered ID is valid
 		if (IdToDelete <= 0 || IdToDelete > attendanceList.size()) {
 			System.out.println("Invalid attendance record ID.");
 			return;
@@ -187,8 +167,7 @@ public void testDeleteAttendance() {
 		attendanceList.remove(IdToDelete - 1);
 		System.out.println("Attendance record with ID " + IdToDelete + " has been deleted.");
 
-    String expected = "Attendance record with ID 1 has been deleted.";
-    assertEquals(expected, output.toString().trim());
+		String expected = "Attendance record with ID 1 has been deleted.";
+		assertEquals(expected, output.toString().trim());
 	}
 }
-    

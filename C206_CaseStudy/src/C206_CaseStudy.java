@@ -281,7 +281,7 @@ public class C206_CaseStudy {
 		switch (selectedOption) {
 			case ADD_USER:
 				addUser();
-
+				
 				break;
 			case VIEW_USERS:
 				viewUsers();
@@ -374,8 +374,7 @@ public class C206_CaseStudy {
 		approvalStatusList.add(new ApprovalStatus("Approved"));
 		approvalStatusList.add(new ApprovalStatus("Rejected"));
 
-		attendanceList.add(new Attendance(userList.get(0), timeSlotList.get(0),
-				new Date(System.currentTimeMillis() - 12 * 60 * 1000)));
+		attendanceList.add(new Attendance(userList.get(0), timeSlotList.get(0), new Date(System.currentTimeMillis() - 12 * 60 * 1000)));
 		attendanceList.add(new Attendance(userList.get(1), timeSlotList.get(1), new Date()));
 		attendanceList.add(new Attendance(userList.get(5), timeSlotList.get(2),
 				new Date(System.currentTimeMillis() + 12 * 60 * 1000)));
@@ -631,26 +630,23 @@ public class C206_CaseStudy {
 		System.out.println("ADD NEW REGISTRATION");
 		System.out.println("-".repeat(24));
 
-		boolean userList_OR_activityList_is_empty = userList.isEmpty() || activityList.isEmpty();
-
-		if (userList_OR_activityList_is_empty) {
+		if (userList.isEmpty() || activityList.isEmpty()) {
 			System.out.println("Error: No users or activities found. Please add users and activities first.");
-
+			return;
 		}
 
 		String userId = Helper.readString("Enter the student's ID for registration: ");
-		
-		boolean check_if_id_exist_in_database = false;
+		Users selectedUser = null;
 
 		// Find the user with the entered student ID
 		for (Users user : userList) {
 			if (user.getStudentId().equalsIgnoreCase(userId)) {
-				check_if_id_exist_in_database = true;
+				selectedUser = user;
 				break;
 			}
 		}
 
-		if (!check_if_id_exist_in_database) {
+		if (selectedUser == null) {
 			System.out.println("User with the entered student ID not found. Registration aborted.");
 			return;
 		}
@@ -838,6 +834,7 @@ public class C206_CaseStudy {
 		System.out.println("Update Registration Status");
 		System.out.println("------------------------");
 
+		// Check if there are any registrations to update
 		if (registrationList.isEmpty()) {
 			System.out.println("No registrations found.");
 			return;
@@ -847,7 +844,6 @@ public class C206_CaseStudy {
 		System.out.println("All Registrations:");
 		System.out.println(String.format("%-5s %-15s %-30s %-20s", "Reg. ID", "User", "Activity", "Status"));
 		System.out.println("--------------------------------------------------------------------------------");
-
 		for (int i = 0; i < registrationList.size(); i++) {
 			Registration registration = registrationList.get(i);
 			System.out.println(String.format("%-5s %-15s %-30s %-20s ",
@@ -856,31 +852,37 @@ public class C206_CaseStudy {
 					registration.getActivity().getActivityName(),
 					registration.getStatus()));
 		}
-
 		System.out.println("--------------------------------------------------------------------------------");
 
+		// Prompt the user to enter the ID of the registration they want to update
 		int registrationIdToUpdate = Helper.readInt("Enter the ID of the registration to update: ");
 
+		// Check if the entered ID is valid
 		if (registrationIdToUpdate <= 0 || registrationIdToUpdate > registrationList.size()) {
 			System.out.println("Invalid registration ID.");
 			return;
 		}
 
+		// Find the registration with the entered ID
 		Registration selectedRegistration = registrationList.get(registrationIdToUpdate - 1);
 
+		// Display available approval statuses
 		System.out.println("Available Approval Statuses:");
-
 		for (int i = 0; i < approvalStatusList.size(); i++) {
 			ApprovalStatus approvalStatus = approvalStatusList.get(i);
 			System.out.println(String.format("%-5s %-20s", (i + 1), approvalStatus.getStatus()));
 		}
 
+		// Prompt the user to select an approval status
 		int selectedApprovalStatusId = Helper.readInt("Enter the ID of the approval status to set: ");
 
+		// Check if the entered ID is valid
 		if (selectedApprovalStatusId <= 0 || selectedApprovalStatusId > approvalStatusList.size()) {
 			System.out.println("Invalid approval status ID.");
 			return;
 		}
+
+		// Update the registration's approval status
 		selectedRegistration.setStatus(approvalStatusList.get(selectedApprovalStatusId - 1).getStatus());
 		System.out.println("Registration status updated successfully!");
 

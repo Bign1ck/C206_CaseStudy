@@ -97,4 +97,6 @@ public class Attendance {
                 ", Check-out Time: " + checkOutTime +
                 ", Status: " + attendanceStatus;
     }
+
+    
 }

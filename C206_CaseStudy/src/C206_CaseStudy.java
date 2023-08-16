@@ -555,7 +555,7 @@ public class C206_CaseStudy {
 		if (activityList.isEmpty()) {
 			System.out.println("No activities found.");
 		}
-		
+
 		if (!activityList.isEmpty()) {
 			String ColumnTitles = String.format("%-5s %-15s %-10s %-30s", "ID", "Activity Name", "Capacity",
 					"Prerequisites");

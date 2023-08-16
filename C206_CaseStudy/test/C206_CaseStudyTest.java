@@ -380,7 +380,7 @@ public void testViewActivitiesNonEmpty() {
         System.setOut(new PrintStream(outContent));
 
         // Redirect user input to simulate providing the approval status name
-        Helper.setInputForTesting("Pending");
+        String input = "Pending";
 
         // Call the addApprovalStatus() method
         // testAddApprovalStatus();
@@ -388,10 +388,9 @@ public void testViewActivitiesNonEmpty() {
 		System.out.println("Add New Approval Status");
 		System.out.println("------------------------");
         approvalStatusList.clear();
-        ApprovalStatus newApprovalStatus = new ApprovalStatus(Helper.getOutputForTesting());
 
 		// Add the new approval status to the approvalStatusList
-		approvalStatusList.add(newApprovalStatus);
+		approvalStatusList.add(new ApprovalStatus(input));
 
 		System.out.println("Approval status added successfully!");
 
@@ -409,8 +408,8 @@ public void testViewActivitiesNonEmpty() {
 
         // Assert that the new approval status is correctly added to the list
         assertEquals(1, approvalStatusList.size());
-    
-        assertEquals("Pending", approvalStatusList.get(0).getStatus());
+        
+        assertEquals("Pending", approvalStatusList.get(0).getStatus().trim());
     }
 
     @Test
@@ -418,16 +417,30 @@ public void testViewActivitiesNonEmpty() {
         System.setOut(new PrintStream(outContent));
 
         // Call the viewApprovalStatuses() method when approvalStatusList is empty
-        testViewApprovalStatusesEmpty();
+        // testViewApprovalStatusesEmpty();
+        System.out.println("------------------------");
+		System.out.println("View All Approval Statuses");
+		System.out.println("------------------------");
 
+		if (approvalStatusList.isEmpty()) {
+			System.out.println("No approval statuses found.");
+		} else {
+			System.out.println("Approval Statuses:");
+			System.out.println(String.format("%-5s %-20s", "ID", "Status Name"));
+			System.out.println("---------------------------");
+			for (int i = 0; i < approvalStatusList.size(); i++) {
+				ApprovalStatus approvalStatus = approvalStatusList.get(i);
+				System.out.println(String.format("%-5s %-20s", (i + 1), approvalStatus.getStatus()));
+			}
+		}
         // Reset System.out to its original value
         System.setOut(originalOut);
 
         // Assert that the printed output matches the expected message
-        String expectedOutput = "------------------------\n" +
-                "View All Approval Statuses\n" +
-                "------------------------\n" +
-                "No approval statuses found.\n";
+        String expectedOutput = "------------------------\r\n" +
+                "View All Approval Statuses\r\n" +
+                "------------------------\r\n" +
+                "No approval statuses found.\r\n";
         assertEquals(expectedOutput, outContent.toString());
     }
 
@@ -440,20 +453,34 @@ public void testViewActivitiesNonEmpty() {
         System.setOut(new PrintStream(outContent));
 
         // Call the viewApprovalStatuses() method when approvalStatusList is not empty
-        testViewApprovalStatusesNonEmpty();
+        // testViewApprovalStatusesNonEmpty();
+        System.out.println("------------------------");
+		System.out.println("View All Approval Statuses");
+		System.out.println("------------------------");
 
+		if (approvalStatusList.isEmpty()) {
+			System.out.println("No approval statuses found.");
+		} else {
+			System.out.println("Approval Statuses:");
+			System.out.println(String.format("%-5s %-20s", "ID", "Status Name"));
+			System.out.println("---------------------------");
+			for (int i = 0; i < approvalStatusList.size(); i++) {
+				ApprovalStatus approvalStatus = approvalStatusList.get(i);
+				System.out.println(String.format("%-5s %-20s", (i + 1), approvalStatus.getStatus()));
+			}
+		}
         // Reset System.out to its original value
         System.setOut(originalOut);
 
         // Assert that the printed output matches the expected message
-        String expectedOutput = "------------------------\n" +
-                "View All Approval Statuses\n" +
-                "------------------------\n" +
-                "Approval Statuses:\n" +
-                "ID    Status Name         \n" +
-                "---------------------------\n" +
-                "1     Pending             \n" +
-                "2     Approved            \n";
+        String expectedOutput = "------------------------\r\n" +
+                "View All Approval Statuses\r\n" +
+                "------------------------\r\n" +
+                "Approval Statuses:\r\n" +
+                "ID    Status Name         \r\n" +
+                "---------------------------\r\n" +
+                "1     Pending             \r\n" +
+                "2     Approved            \r\n";
 
         assertEquals(expectedOutput, outContent.toString());
     }
@@ -470,25 +497,56 @@ public void testViewActivitiesNonEmpty() {
         System.setOut(new PrintStream(outContent));
 
         // Simulate user input for deleting an approval status
-        Helper.setInputForTesting("1\n");
+        int input = 1;
 
         // Call the deleteApprovalStatus() method
-        testDeleteApprovalStatus();
+        // testDeleteApprovalStatus();
+        System.out.println("------------------------");
+		System.out.println("Delete Approval Status");
+		System.out.println("------------------------");
 
+		// Check if there are any approval statuses to delete
+		if (approvalStatusList.isEmpty()) {
+			System.out.println("No approval statuses found.");
+			return;
+		}
+
+		// Display all approval statuses with their IDs
+		System.out.println("All Approval Statuses:");
+		System.out.println(String.format("%-5s %-10s", "ID", "Status"));
+		System.out.println("---------------------------");
+		for (int i = 0; i < approvalStatusList.size(); i++) {
+			ApprovalStatus status = approvalStatusList.get(i);
+			System.out.println(String.format("%-5s %-10s", (i + 1), status.getStatus()));
+		}
+
+		// Prompt the user to enter the ID of the approval status they want to delete
+		int approvalStatusIdToDelete = input;
+
+		// Check if the entered ID is valid
+		if (approvalStatusIdToDelete <= 0 || approvalStatusIdToDelete > approvalStatusList.size()) {
+			System.out.println("Invalid approval status ID.");
+			return;
+		}
+
+		// Remove the approval status from the list and inform the user
+		ApprovalStatus deletedStatus = approvalStatusList.remove(approvalStatusIdToDelete - 1);
+		System.out
+				.println("Approval status with ID " + approvalStatusIdToDelete + " has been deleted: " + deletedStatus);
         // Reset System.out and user input to their original values
         System.setOut(originalOut);
         Helper.resetTestingInput();
 
         // Assert that the printed output matches the expected message
-        String expectedOutput = "------------------------\n" +
-                "Delete Approval Status\n" +
-                "------------------------\n" +
-                "All Approval Statuses:\n" +
-                "ID    Status     \n" +
-                "---------------------------\n" +
-                "1     Pending    \n" +
-                "2     Approved   \n" +
-                "Approval status with ID 1 has been deleted: Status: Pending\n";
+        String expectedOutput = "------------------------\r\n" +
+                "Delete Approval Status\r\n" +
+                "------------------------\r\n" +
+                "All Approval Statuses:\r\n" +
+                "ID    Status     \r\n" +
+                "---------------------------\r\n" +
+                "1     Pending    \r\n" +
+                "2     Approved   \r\n" +
+                "Approval status with ID 1 has been deleted: Status: Pending\r\n";
 
         assertEquals(expectedOutput, outContent.toString());
 

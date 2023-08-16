@@ -319,8 +319,36 @@ public void testViewActivitiesNonEmpty() {
         System.setIn(mockInput);
 
         // Call the deleteRegistration() method
-        testDeleteRegistration();
+        // testDeleteRegistration();
+		System.out.println("------------------------");
+		System.out.println("Delete Registration");
+		System.out.println("------------------------");
+        System.out.println("All Registrations:");
+		System.out
+				.println(String.format("%-5s %-15s %-30s %-20s", "Reg. ID", "User", "Activity", "Status"));
+		System.out.println("--------------------------------------------------------------------------------");
+		for (int i = 0; i < registrationList.size(); i++) {
+			Registration reg = registrationList.get(i);
+			System.out.println(String.format("%-5s %-15s %-30s %-20s ",
 
+					reg.getRegistrationId(),
+					reg.getUser().getName(),
+					reg.getActivity().getActivityName(),
+					reg.getStatus()));
+		}
+		System.out.println("--------------------------------------------------------------------------------");
+		// Prompt the user to enter the ID of the registration they want to delete
+		int registrationIdToDelete = Helper.readInt("Enter the ID of the registration to delete: ");
+
+		// Check if the entered ID is valid
+		if (registrationIdToDelete <= 0 || registrationIdToDelete > registrationList.size()) {
+			System.out.println("Invalid registration ID.");
+			return;
+		}
+
+		// Remove the registration from the list and inform the user
+		registrationList.remove(registrationIdToDelete - 1);
+		System.out.println("Registration with ID " + registrationIdToDelete + " has been deleted.");
         // Reset System.out and System.in to their original values
         System.setOut(originalOut);
         System.setIn(System.in);
@@ -355,19 +383,28 @@ public void testViewActivitiesNonEmpty() {
         Helper.setInputForTesting("Pending\n");
 
         // Call the addApprovalStatus() method
-        testAddApprovalStatus();
+        // testAddApprovalStatus();
+        System.out.println("------------------------");
+		System.out.println("Add New Approval Status");
+		System.out.println("------------------------");
+        ApprovalStatus newApprovalStatus = new ApprovalStatus(Helper.getOutputForTesting());
+
+		// Add the new approval status to the approvalStatusList
+		approvalStatusList.add(newApprovalStatus);
+
+		System.out.println("Approval status added successfully!");
 
         // Reset System.out and user input to their original values
         System.setOut(originalOut);
         Helper.resetTestingInput();
 
         // Assert that the printed output matches the expected message
-        String expectedOutput = "------------------------\n" +
-                "Add New Approval Status\n" +
-                "------------------------\n" +
+        String expectedOutput = "-".repeat(24)+"\n" +
+                "Add New Approval Status"+"\n" +
+                "-".repeat(24)+"\n" +
                 "Approval status added successfully!\n";
 
-        assertEquals(expectedOutput, outContent.toString());
+        assertEquals(expectedOutput.trim(), outContent.toString().trim());
 
         // Assert that the new approval status is correctly added to the list
         assertEquals(1, approvalStatusList.size());

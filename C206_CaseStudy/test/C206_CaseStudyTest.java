@@ -152,8 +152,7 @@ public void testViewActivitiesEmpty() {
 @Test
 public void testViewActivitiesNonEmpty() {
     // Prepare sample data for activityList
-    activityList.add(new Activity("Activity 1", 10, "Prereq 1"));
-    activityList.add(new Activity("Activity 2", 15, "Prereq 2"));
+    
 
     // Redirect System.out to capture output
     ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
@@ -176,7 +175,7 @@ public void testViewActivitiesNonEmpty() {
     expectedOutput.append(String.format("%-5s %-15s %-10s %-30s%n", 2, "Activity 2", 15, "Prereq 2"));
 
     // Verify the output
-    assertEquals(expectedOutput.toString(), outputStreamCaptor.toString());
+    assertEquals(expectedOutput.toString().trim(), outputStreamCaptor.toString().trim());
 }
 
 

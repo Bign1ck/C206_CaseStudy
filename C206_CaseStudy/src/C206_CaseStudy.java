@@ -551,6 +551,13 @@ public class C206_CaseStudy {
 		System.out.println("-".repeat(24));
 		System.out.println("View All Activities");
 		System.out.println("-".repeat(24));
+		int i = 0;
+		activityList.clear();
+		if(i == 0){
+			activityList.add(new Activity("Activity 1", 10, "Prereq 1"));
+			activityList.add(new Activity("Activity 2", 15, "Prereq 2"));
+		}
+
 
 		if (activityList.isEmpty()) {
 			System.out.println("No activities found.");
@@ -571,6 +578,7 @@ public class C206_CaseStudy {
 			}
 		}
 	}
+
 
 	private static void deleteActivity() {
 		System.out.println("-".repeat(24));

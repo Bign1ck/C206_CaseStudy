@@ -1,5 +1,6 @@
 import static org.junit.Assert.*;
 
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -111,9 +112,45 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
     // ------------------------------------------------------------------------------------------------------------------------
     // ------------------------------------------------------------------------------------------------------------------------
     // ------------------------------------------------------------------------------------------------------------------------
-// do testDeleteUserBOUNDARY
-    
-    // do testViewUsersERROR
+// do testDeleteUserBOUNDARY and testViewUsersERROR
+    @Test
+    public void testDeleteUserBOUNDARY() {
+        // Add a user to the list
+        Users userToDelete = new Users("Test User", "99999", "S_test_user", "S");
+        userList.add(userToDelete);
+
+        // Call the deleteUser method to delete the added user
+        deleteUser();
+
+        // Verify that the user has been deleted from the list
+        assertFalse("User has been deleted", userList.contains(userToDelete));
+    }
+
+    @Test
+    public void testViewUsersERROR() {
+        // Redirect System.out to capture output
+        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStreamCaptor));
+
+        // Set userList to null to simulate an error condition
+        userList = null;
+
+        // Call the viewUsers method
+        viewUsers();
+
+        // Reset System.out to its original state
+        System.setOut(originalOut);
+
+        // Verify the expected error output
+        String expectedOutput = "-".repeat(80) + System.lineSeparator() +
+                "USERS LIST" + System.lineSeparator() +
+                "-".repeat(80) + System.lineSeparator() +
+                "An error occurred while retrieving user data." + System.lineSeparator() +
+                "-".repeat(80) + System.lineSeparator();
+
+        assertEquals(expectedOutput, outputStreamCaptor.toString());
+    }
+
     
     @Test
     public void testAddActivity() {

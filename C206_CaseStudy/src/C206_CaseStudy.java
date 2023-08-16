@@ -630,23 +630,26 @@ public class C206_CaseStudy {
 		System.out.println("ADD NEW REGISTRATION");
 		System.out.println("-".repeat(24));
 
-		if (userList.isEmpty() || activityList.isEmpty()) {
+		boolean userList_OR_activityList_is_empty = userList.isEmpty() || activityList.isEmpty();
+
+		if (userList_OR_activityList_is_empty) {
 			System.out.println("Error: No users or activities found. Please add users and activities first.");
-			return;
+
 		}
 
 		String userId = Helper.readString("Enter the student's ID for registration: ");
-		Users selectedUser = null;
+		
+		boolean check_if_id_exist_in_database = false;
 
 		// Find the user with the entered student ID
 		for (Users user : userList) {
 			if (user.getStudentId().equalsIgnoreCase(userId)) {
-				selectedUser = user;
+				check_if_id_exist_in_database = true;
 				break;
 			}
 		}
 
-		if (selectedUser == null) {
+		if (!check_if_id_exist_in_database) {
 			System.out.println("User with the entered student ID not found. Registration aborted.");
 			return;
 		}

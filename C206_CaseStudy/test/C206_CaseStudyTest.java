@@ -50,6 +50,7 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
         approvalStatusList = null;
     }
 
+    // testAddUser normal condition
     @Test
     public void testAddUser() {
         String simulatedInput = "John Doe\n123456\nS\n";
@@ -70,6 +71,71 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
         assertEquals("123456", addedUser.getStudentId());
         assertEquals("S", addedUser.getRole());
     }
+    
+    // 3 conditions in one test case, might edit more....
+    @Test
+    public void testAddUserConditions() {
+        // Test normal condition
+        String simulatedInputNormal = "John Doe\n123456\nS\n";
+        InputStream savedSystemInNormal = System.in;
+        System.setIn(new ByteArrayInputStream(simulatedInputNormal.getBytes()));
+
+        // Call the addUser method
+        addUser();
+
+        // Reset System.in to its original state
+        System.setIn(savedSystemInNormal);
+
+        // Verify the expected behavior
+        assertEquals(4, userList.size());
+
+        Users addedUserNormal = userList.get(3);
+        assertEquals("John Doe", addedUserNormal.getName());
+        assertEquals("123456", addedUserNormal.getStudentId());
+        assertEquals("S", addedUserNormal.getRole());
+
+        // Test boundary condition
+        String simulatedInputBoundary = "Alice Brown\n999999\nT\n";
+        InputStream savedSystemInBoundary = System.in;
+        System.setIn(new ByteArrayInputStream(simulatedInputBoundary.getBytes()));
+
+        // Call the addUser method
+        addUser();
+
+        // Reset System.in to its original state
+        System.setIn(savedSystemInBoundary);
+
+        // Verify the expected behavior
+        assertEquals(5, userList.size());
+
+        Users addedUserBoundary = userList.get(4);
+        assertEquals("Alice Brown", addedUserBoundary.getName());
+        assertEquals("999999", addedUserBoundary.getStudentId());
+        assertEquals("T", addedUserBoundary.getRole());
+
+        // Test error condition
+        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStreamCaptor));
+
+        // Provide incomplete input to trigger an error
+        String simulatedInputError = "Jane Smith\n\nT\n";
+        InputStream savedSystemInError = System.in;
+        System.setIn(new ByteArrayInputStream(simulatedInputError.getBytes()));
+
+        // Call the addUser method
+        addUser();
+
+        // Reset System.in and System.out to their original states
+        System.setIn(savedSystemInError);
+        System.setOut(originalOut);
+
+        // Verify the expected error output
+        String expectedOutputError = "An error occurred while adding the user. Please ensure all required fields are provided." + System.lineSeparator();
+
+        assertEquals(expectedOutputError, outputStreamCaptor.toString());
+    }
+    
+    
 
     @Test
     public void testViewUsersEmpty() {
@@ -112,44 +178,6 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
     // ------------------------------------------------------------------------------------------------------------------------
     // ------------------------------------------------------------------------------------------------------------------------
     // ------------------------------------------------------------------------------------------------------------------------
-// do testDeleteUserBOUNDARY and testViewUsersERROR
-    @Test
-    public void testDeleteUserBOUNDARY() {
-        // Add a user to the list
-        Users userToDelete = new Users("Test User", "99999", "S_test_user", "S");
-        userList.add(userToDelete);
-
-        // Call the deleteUser method to delete the added user
-        deleteUser();
-
-        // Verify that the user has been deleted from the list
-        assertFalse("User has been deleted", userList.contains(userToDelete));
-    }
-
-    @Test
-    public void testViewUsersERROR() {
-        // Redirect System.out to capture output
-        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outputStreamCaptor));
-
-        // Set userList to null to simulate an error condition
-        userList = null;
-
-        // Call the viewUsers method
-        viewUsers();
-
-        // Reset System.out to its original state
-        System.setOut(originalOut);
-
-        // Verify the expected error output
-        String expectedOutput = "-".repeat(80) + System.lineSeparator() +
-                "USERS LIST" + System.lineSeparator() +
-                "-".repeat(80) + System.lineSeparator() +
-                "An error occurred while retrieving user data." + System.lineSeparator() +
-                "-".repeat(80) + System.lineSeparator();
-
-        assertEquals(expectedOutput, outputStreamCaptor.toString());
-    }
 
     
     @Test

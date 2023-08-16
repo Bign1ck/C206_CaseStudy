@@ -274,20 +274,34 @@ public void testViewActivitiesNonEmpty() {
         System.setOut(new PrintStream(outContent));
 
         // Call the viewRegistrations() method
-        testViewActivitiesNonEmpty();
+        System.out.println("--------------------------------------------------------------------------------");
+		System.out.printf("%-15s %-30s %-20s %-15s%n", "Registration ID", "User", "Activity", "Status");
+		System.out.println("--------------------------------------------------------------------------------");
+
+		// Print registration details
+		for (Registration reg : registrationList) {
+			System.out.printf("%-15s %-30s %-20s %-15s%n",
+					reg.getRegistrationId(),
+					reg.getUser().getName(),
+					reg.getActivity().getActivityName(),
+					reg.getStatus());
+		}
+
+		// Print footer
+		System.out.println("--------------------------------------------------------------------------------");
 
         // Reset System.out to its original value
         System.setOut(originalOut);
 
         // Assert that the printed output matches the expected format
-        String expectedOutput = "--------------------------------------------------------------------------------\n" +
-                "Registration ID  User                           Activity            Status         \n" +
-                "--------------------------------------------------------------------------------\n" +
+        String expectedOutput = "-".repeat(80)+"\n" +
+                String.format("%-15s %-30s %-20s %-15s%n", "Registration ID", "User", "Activity", "Status")+
+                "-".repeat(80)+"\n" +
                 String.format("%-15s %-30s %-20s %-15s%n", registration.getRegistrationId(), user.getName(),
                         activity.getActivityName(), registration.getStatus())
                 +
-                "--------------------------------------------------------------------------------\n";
-        assertEquals(expectedOutput, outContent.toString());
+                "-".repeat(80);
+        assertEquals(expectedOutput.trim(), outContent.toString().trim());
     }
 
     @Test

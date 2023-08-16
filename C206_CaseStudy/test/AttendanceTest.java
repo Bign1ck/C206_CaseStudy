@@ -100,4 +100,5 @@ public class AttendanceTest extends C206_CaseStudy{
         assertEquals(input_checkInTime, input_timeSlotID, input_userID, input_timeSlotID);
     }
 }
+}
     

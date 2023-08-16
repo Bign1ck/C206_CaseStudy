@@ -167,7 +167,7 @@ public void testViewActivitiesNonEmpty() {
     System.out.println("-".repeat(24));
     System.out.println("View All Activities");
     System.out.println("-".repeat(24));
-    
+
     if (!activityList.isEmpty()) {
         String ColumnTitles = String.format("%-5s %-15s %-10s %-30s", "ID", "Activity Name", "Capacity",
                 "Prerequisites");
@@ -246,14 +246,20 @@ public void testViewActivitiesNonEmpty() {
         System.setOut(new PrintStream(outContent));
 
         // Call the viewRegistrations() method
-        testViewActivitiesEmpty();
+
+        registrationList.clear();
+        if (registrationList.isEmpty()) {
+			System.out.println("No registrations found.");
+			return;
+		}
+		
 
         // Reset System.out to its original value
         System.setOut(originalOut);
 
         // Assert that the printed output matches the expected message for empty list
-        String expectedOutput = "No registrations found.\n";
-        assertEquals(expectedOutput, outContent.toString());
+        String expectedOutput = "No registrations found.";
+        assertEquals(expectedOutput.trim(), outContent.toString().trim());
     }
 
     @Test

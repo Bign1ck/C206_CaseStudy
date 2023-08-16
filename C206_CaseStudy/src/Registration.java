@@ -15,12 +15,6 @@ class Registration {
         this.status = status;
     }
 
-    public Registration(Users user, Activity activity, Date date) {
-        this.user = user;
-        this.activity = activity;
-        this.date = date;
-    }
-
     public int getRegistrationId() {
         return registrationId;
     }

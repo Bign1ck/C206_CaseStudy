@@ -30,11 +30,12 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
         registrationList = new ArrayList<>();
         approvalStatusList = new ArrayList<>();
 
-        Users user1 = new Users("John Doe", "123456", "S_john_doe", "S");
-        userList.add(user1);
+        userList.add(new Users("John Doe", "12345", "S_john_doe", "S"));
+        activityList.add(new Activity("Swimming", 20, "Swimming goggles"));
 
         Users user2 = new Users("Jane Smith", "789012", "T_jane_smith", "T");
         userList.add(user2);
+
     }
 
     @After
@@ -83,8 +84,6 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
                 "-".repeat(80) + System.lineSeparator(), outContent.toString());
     }
 
-   
-
     @Test
     public void testDeleteUser() {
         // Test deleteUser() method
@@ -129,83 +128,81 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
     }
 
     @Test
-public void testViewActivitiesEmpty() {
-    // Redirect System.out to capture output
-    ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-    System.setOut(new PrintStream(outputStreamCaptor));
+    public void testViewActivitiesEmpty() {
+        // Redirect System.out to capture output
+        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStreamCaptor));
 
-    // Call the viewActivities method with an empty activity list
-    viewActivities();
+        // Call the viewActivities method with an empty activity list
+        viewActivities();
 
-    // Reset System.out to its original state
-    System.setOut(originalOut);
+        // Reset System.out to its original state
+        System.setOut(originalOut);
 
-    // Verify the output
-    String expectedOutput = "-".repeat(24) + System.lineSeparator() +
-            "View All Activities" + System.lineSeparator() +
-            "-".repeat(24) + System.lineSeparator() +
-            "No activities found.";
+        // Verify the output
+        String expectedOutput = "-".repeat(24) + System.lineSeparator() +
+                "View All Activities" + System.lineSeparator() +
+                "-".repeat(24) + System.lineSeparator() +
+                "No activities found.";
 
-    assertEquals(expectedOutput, outputStreamCaptor.toString().trim());
-}
-
-
-@Test
-public void testViewActivitiesNonEmpty() {
-    // Prepare sample data for activityList
-    if(activityList.isEmpty()){
-        activityList.add(new Activity("Swimming", 20, "Swimming goggles"));
-		activityList.add(new Activity("Yoga", 15, "Yoga mat"));
-		activityList.add(new Activity("Running", 30, "Running shoes"));
-		activityList.add(new Activity("Dancing", 25, "Dance shoes"));
+        assertEquals(expectedOutput, outputStreamCaptor.toString().trim());
     }
 
-    // Redirect System.out to capture output
-    ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-    System.setOut(new PrintStream(outputStreamCaptor));
-
-    // Call the viewActivities method with non-empty activity list
-    System.out.println("-".repeat(24));
-    System.out.println("View All Activities");
-    System.out.println("-".repeat(24));
-
-    if (!activityList.isEmpty()) {
-        String ColumnTitles = String.format("%-5s %-15s %-10s %-30s", "ID", "Activity Name", "Capacity",
-                "Prerequisites");
-        System.out.println(ColumnTitles);
-
-        System.out.println("-".repeat(51));
-
-        for (Activity activity : activityList) {
-            String rowDetails = String.format("%-5s %-15s %-10s %-30s", activity.getActivityId(),
-                    activity.getActivityName(),
-                    activity.getCapacity(), activity.getPrerequisites());
-            System.out.println(rowDetails);
+    @Test
+    public void testViewActivitiesNonEmpty() {
+        // Prepare sample data for activityList
+        if (activityList.isEmpty()) {
+            activityList.add(new Activity("Swimming", 20, "Swimming goggles"));
+            activityList.add(new Activity("Yoga", 15, "Yoga mat"));
+            activityList.add(new Activity("Running", 30, "Running shoes"));
+            activityList.add(new Activity("Dancing", 25, "Dance shoes"));
         }
+
+        // Redirect System.out to capture output
+        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStreamCaptor));
+
+        // Call the viewActivities method with non-empty activity list
+        System.out.println("-".repeat(24));
+        System.out.println("View All Activities");
+        System.out.println("-".repeat(24));
+
+        if (!activityList.isEmpty()) {
+            String ColumnTitles = String.format("%-5s %-15s %-10s %-30s", "ID", "Activity Name", "Capacity",
+                    "Prerequisites");
+            System.out.println(ColumnTitles);
+
+            System.out.println("-".repeat(51));
+
+            for (Activity activity : activityList) {
+                String rowDetails = String.format("%-5s %-15s %-10s %-30s", activity.getActivityId(),
+                        activity.getActivityName(),
+                        activity.getCapacity(), activity.getPrerequisites());
+                System.out.println(rowDetails);
+            }
+        }
+
+        // Reset System.out to its original state
+        System.setOut(originalOut);
+
+        // Construct the expected output
+        StringBuilder expectedOutput = new StringBuilder();
+        expectedOutput.append("-".repeat(24)).append(System.lineSeparator());
+        expectedOutput.append("View All Activities").append(System.lineSeparator());
+        expectedOutput.append("-".repeat(24)).append(System.lineSeparator());
+        expectedOutput
+                .append(String.format("%-5s %-15s %-10s %-30s%n", "ID", "Activity Name", "Capacity", "Prerequisites"));
+        expectedOutput.append("-".repeat(51)).append(System.lineSeparator());
+        expectedOutput.append(String.format("%-5s %-15s %-10s %-30s%n", 1, "Swimming", 20, "Swimming goggles"));
+        expectedOutput.append(String.format("%-5s %-15s %-10s %-30s%n", 2, "Yoga", 15, "Yoga mat"));
+        expectedOutput.append(String.format("%-5s %-15s %-10s %-30s%n", 3, "Running", 30, "Running shoes"));
+        expectedOutput.append(String.format("%-5s %-15s %-10s %-30s%n", 4, "Dancing", 25, "Dance shoes"));
+
+        // Verify the output
+        assertEquals(expectedOutput.toString().trim(), outputStreamCaptor.toString().trim());
     }
 
-    // Reset System.out to its original state
-    System.setOut(originalOut);
-
-    // Construct the expected output
-    StringBuilder expectedOutput = new StringBuilder();
-    expectedOutput.append("-".repeat(24)).append(System.lineSeparator());
-    expectedOutput.append("View All Activities").append(System.lineSeparator());
-    expectedOutput.append("-".repeat(24)).append(System.lineSeparator());
-    expectedOutput.append(String.format("%-5s %-15s %-10s %-30s%n", "ID", "Activity Name", "Capacity", "Prerequisites"));
-    expectedOutput.append("-".repeat(51)).append(System.lineSeparator());
-    expectedOutput.append(String.format("%-5s %-15s %-10s %-30s%n", 1, "Swimming", 20, "Swimming goggles"));
-    expectedOutput.append(String.format("%-5s %-15s %-10s %-30s%n", 2, "Yoga", 15, "Yoga mat"));
-    expectedOutput.append(String.format("%-5s %-15s %-10s %-30s%n", 3, "Running", 30, "Running shoes"));
-    expectedOutput.append(String.format("%-5s %-15s %-10s %-30s%n", 4, "Dancing", 25, "Dance shoes"));
-
-
-
-    // Verify the output
-    assertEquals(expectedOutput.toString().trim(), outputStreamCaptor.toString().trim());
-}
-
-@Test
+    @Test
     public void testDeleteActivity() {
         // Prepare sample activities
         Activity activity1 = new Activity("Swimming", 20, "Swimming goggles");
@@ -216,26 +213,26 @@ public void testViewActivitiesNonEmpty() {
         // Assuming deleteActivity method is part of C206_CaseStudy class
         // C206_CaseStudy.deleteActivity(activityList, 1); // Deleting by index or ID,
         // based on implementation
-         ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStreamCaptor));
 
-		if (activityList.isEmpty()) {
-			System.out.println("No activities found.");
-			return;
-		}
+        if (activityList.isEmpty()) {
+            System.out.println("No activities found.");
+            return;
+        }
 
-		int activityIdToDelete = inputID;
+        int activityIdToDelete = inputID;
 
-		Activity activityToDelete = null;
-		for (Activity activity : activityList) {
-			if (activity.getActivityId() == activityIdToDelete) {
-				activityToDelete = activity;
+        Activity activityToDelete = null;
+        for (Activity activity : activityList) {
+            if (activity.getActivityId() == activityIdToDelete) {
+                activityToDelete = activity;
                 System.out.println("Activity has been deleted");
-				break;
-			}
-		}
+                break;
+            }
+        }
         // Check if activity with index or ID 1 has been deleted
-        assertEquals("Activity has been deleted",outputStreamCaptor.toString().trim());
+        assertEquals("Activity has been deleted", outputStreamCaptor.toString().trim());
     }
 
     // ------------------------------------------------------------------------------------------------------------------------------------
@@ -267,10 +264,9 @@ public void testViewActivitiesNonEmpty() {
 
         registrationList.clear();
         if (registrationList.isEmpty()) {
-			System.out.println("No registrations found.");
-			return;
-		}
-		
+            System.out.println("No registrations found.");
+            return;
+        }
 
         // Reset System.out to its original value
         System.setOut(originalOut);
@@ -293,28 +289,28 @@ public void testViewActivitiesNonEmpty() {
 
         // Call the viewRegistrations() method
         System.out.println("--------------------------------------------------------------------------------");
-		System.out.printf("%-15s %-30s %-20s %-15s%n", "Registration ID", "User", "Activity", "Status");
-		System.out.println("--------------------------------------------------------------------------------");
+        System.out.printf("%-15s %-30s %-20s %-15s%n", "Registration ID", "User", "Activity", "Status");
+        System.out.println("--------------------------------------------------------------------------------");
 
-		// Print registration details
-		for (Registration reg : registrationList) {
-			System.out.printf("%-15s %-30s %-20s %-15s%n",
-					reg.getRegistrationId(),
-					reg.getUser().getName(),
-					reg.getActivity().getActivityName(),
-					reg.getStatus());
-		}
+        // Print registration details
+        for (Registration reg : registrationList) {
+            System.out.printf("%-15s %-30s %-20s %-15s%n",
+                    reg.getRegistrationId(),
+                    reg.getUser().getName(),
+                    reg.getActivity().getActivityName(),
+                    reg.getStatus());
+        }
 
-		// Print footer
-		System.out.println("--------------------------------------------------------------------------------");
+        // Print footer
+        System.out.println("--------------------------------------------------------------------------------");
 
         // Reset System.out to its original value
         System.setOut(originalOut);
 
         // Assert that the printed output matches the expected format
-        String expectedOutput = "-".repeat(80)+"\r\n" +
-                String.format("%-15s %-30s %-20s %-15s%n", "Registration ID", "User", "Activity", "Status")+
-                "-".repeat(80)+"\r\n" +
+        String expectedOutput = "-".repeat(80) + "\r\n" +
+                String.format("%-15s %-30s %-20s %-15s%n", "Registration ID", "User", "Activity", "Status") +
+                "-".repeat(80) + "\r\n" +
                 String.format("%-15s %-30s %-20s %-15s%n", registration.getRegistrationId(), user.getName(),
                         activity.getActivityName(), registration.getStatus())
                 +
@@ -338,35 +334,35 @@ public void testViewActivitiesNonEmpty() {
 
         // Call the deleteRegistration() method
         // testDeleteRegistration();
-		System.out.println("------------------------");
-		System.out.println("Delete Registration");
-		System.out.println("------------------------");
+        System.out.println("------------------------");
+        System.out.println("Delete Registration");
+        System.out.println("------------------------");
         System.out.println("All Registrations:");
-		System.out
-				.println(String.format("%-5s %-15s %-30s %-20s", "Reg. ID", "User", "Activity", "Status"));
-		System.out.println("--------------------------------------------------------------------------------");
-		for (int i = 0; i < registrationList.size(); i++) {
-			Registration reg = registrationList.get(i);
-			System.out.println(String.format("%-5s %-15s %-30s %-20s ",
+        System.out
+                .println(String.format("%-5s %-15s %-30s %-20s", "Reg. ID", "User", "Activity", "Status"));
+        System.out.println("--------------------------------------------------------------------------------");
+        for (int i = 0; i < registrationList.size(); i++) {
+            Registration reg = registrationList.get(i);
+            System.out.println(String.format("%-5s %-15s %-30s %-20s ",
 
-					reg.getRegistrationId(),
-					reg.getUser().getName(),
-					reg.getActivity().getActivityName(),
-					reg.getStatus()));
-		}
-		System.out.println("--------------------------------------------------------------------------------");
-		// Prompt the user to enter the ID of the registration they want to delete
-		int registrationIdToDelete = Helper.readInt("Enter the ID of the registration to delete: ");
+                    reg.getRegistrationId(),
+                    reg.getUser().getName(),
+                    reg.getActivity().getActivityName(),
+                    reg.getStatus()));
+        }
+        System.out.println("--------------------------------------------------------------------------------");
+        // Prompt the user to enter the ID of the registration they want to delete
+        int registrationIdToDelete = Helper.readInt("Enter the ID of the registration to delete: ");
 
-		// Check if the entered ID is valid
-		if (registrationIdToDelete <= 0 || registrationIdToDelete > registrationList.size()) {
-			System.out.println("Invalid registration ID.");
-			return;
-		}
+        // Check if the entered ID is valid
+        if (registrationIdToDelete <= 0 || registrationIdToDelete > registrationList.size()) {
+            System.out.println("Invalid registration ID.");
+            return;
+        }
 
-		// Remove the registration from the list and inform the user
-		registrationList.remove(registrationIdToDelete - 1);
-		System.out.println("Registration with ID " + registrationIdToDelete + " has been deleted.");
+        // Remove the registration from the list and inform the user
+        registrationList.remove(registrationIdToDelete - 1);
+        System.out.println("Registration with ID " + registrationIdToDelete + " has been deleted.");
         // Reset System.out and System.in to their original values
         System.setOut(originalOut);
         System.setIn(System.in);
@@ -376,7 +372,7 @@ public void testViewActivitiesNonEmpty() {
                 "Delete Registration\r\n" +
                 "------------------------\r\n" +
                 "All Registrations:\r\n" +
-                String.format("%-5s %-15s %-30s %-20s", "Reg. ID", "User", "Activity", "Status")+"\r\n" +
+                String.format("%-5s %-15s %-30s %-20s", "Reg. ID", "User", "Activity", "Status") + "\r\n" +
                 "--------------------------------------------------------------------------------\r\n" +
                 String.format("%-5s %-15s %-30s %-20s ", registration.getRegistrationId(), user.getName(),
                         activity.getActivityName(), registration.getStatus())
@@ -387,6 +383,42 @@ public void testViewActivitiesNonEmpty() {
 
         assertEquals(expectedOutput.trim(), outContent.toString().trim());
         assertEquals(0, registrationList.size()); // Check that the registration was removed from the list
+    }
+
+    @Test
+    public void testUpdateRegistrationStatus() {
+        // Add sample approval statuses
+        approvalStatusList.add(new ApprovalStatus("Pending"));
+        approvalStatusList.add(new ApprovalStatus("Approved"));
+
+        // Add a sample registration
+        Users user = new Users("John Doe", "123456", null, null);
+        Activity activity = new Activity("Chess Club", 20);
+        Registration registration = new Registration(user, activity, "Pending");
+        registrationList.add(registration);
+
+        String registrationIdToUpdate = user.getStudentId();
+        int selectedApprovalStatusId = 1;
+        Registration selectedRegistration = registration;
+
+        // Update the registration's approval status
+        selectedRegistration.setStatus(approvalStatusList.get(selectedApprovalStatusId - 1).getStatus());
+        System.out.println("Registration status updated successfully!");
+
+        if (selectedRegistration.getStatus().equalsIgnoreCase("Approved")) {
+            Activity selectedActivity = selectedRegistration.getActivity();
+            selectedActivity.reduceCapacity();
+            System.out.println("Activity capacity reduced by one.");
+
+            C206_CaseStudy.updateRegistrationStatus();
+
+            // Get the updated approval status directly from the registration
+            String updatedStatus = registration.getStatus();
+
+            // Assert that the approval status has been updated
+            assertEquals(19, selectedActivity.getCapacity());
+            assertEquals("Approved", updatedStatus);
+        }
     }
 
     // -----------------------------------------------------------------------------------------------------------------------------------
@@ -403,30 +435,30 @@ public void testViewActivitiesNonEmpty() {
         // Call the addApprovalStatus() method
         // testAddApprovalStatus();
         System.out.println("------------------------");
-		System.out.println("Add New Approval Status");
-		System.out.println("------------------------");
+        System.out.println("Add New Approval Status");
+        System.out.println("------------------------");
         approvalStatusList.clear();
 
-		// Add the new approval status to the approvalStatusList
-		approvalStatusList.add(new ApprovalStatus(input));
+        // Add the new approval status to the approvalStatusList
+        approvalStatusList.add(new ApprovalStatus(input));
 
-		System.out.println("Approval status added successfully!");
+        System.out.println("Approval status added successfully!");
 
         // Reset System.out and user input to their original values
         System.setOut(originalOut);
         Helper.resetTestingInput();
 
         // Assert that the printed output matches the expected message
-        String expectedOutput = "-".repeat(24)+"\r\n" +
-                "Add New Approval Status"+"\r\n" +
-                "-".repeat(24)+"\r\n" +
+        String expectedOutput = "-".repeat(24) + "\r\n" +
+                "Add New Approval Status" + "\r\n" +
+                "-".repeat(24) + "\r\n" +
                 "Approval status added successfully!\r\n";
 
         assertEquals(expectedOutput.trim(), outContent.toString().trim());
 
         // Assert that the new approval status is correctly added to the list
         assertEquals(1, approvalStatusList.size());
-        
+
         assertEquals("Pending", approvalStatusList.get(0).getStatus().trim());
     }
 
@@ -437,20 +469,20 @@ public void testViewActivitiesNonEmpty() {
         // Call the viewApprovalStatuses() method when approvalStatusList is empty
         // testViewApprovalStatusesEmpty();
         System.out.println("------------------------");
-		System.out.println("View All Approval Statuses");
-		System.out.println("------------------------");
+        System.out.println("View All Approval Statuses");
+        System.out.println("------------------------");
 
-		if (approvalStatusList.isEmpty()) {
-			System.out.println("No approval statuses found.");
-		} else {
-			System.out.println("Approval Statuses:");
-			System.out.println(String.format("%-5s %-20s", "ID", "Status Name"));
-			System.out.println("---------------------------");
-			for (int i = 0; i < approvalStatusList.size(); i++) {
-				ApprovalStatus approvalStatus = approvalStatusList.get(i);
-				System.out.println(String.format("%-5s %-20s", (i + 1), approvalStatus.getStatus()));
-			}
-		}
+        if (approvalStatusList.isEmpty()) {
+            System.out.println("No approval statuses found.");
+        } else {
+            System.out.println("Approval Statuses:");
+            System.out.println(String.format("%-5s %-20s", "ID", "Status Name"));
+            System.out.println("---------------------------");
+            for (int i = 0; i < approvalStatusList.size(); i++) {
+                ApprovalStatus approvalStatus = approvalStatusList.get(i);
+                System.out.println(String.format("%-5s %-20s", (i + 1), approvalStatus.getStatus()));
+            }
+        }
         // Reset System.out to its original value
         System.setOut(originalOut);
 
@@ -473,20 +505,20 @@ public void testViewActivitiesNonEmpty() {
         // Call the viewApprovalStatuses() method when approvalStatusList is not empty
         // testViewApprovalStatusesNonEmpty();
         System.out.println("------------------------");
-		System.out.println("View All Approval Statuses");
-		System.out.println("------------------------");
+        System.out.println("View All Approval Statuses");
+        System.out.println("------------------------");
 
-		if (approvalStatusList.isEmpty()) {
-			System.out.println("No approval statuses found.");
-		} else {
-			System.out.println("Approval Statuses:");
-			System.out.println(String.format("%-5s %-20s", "ID", "Status Name"));
-			System.out.println("---------------------------");
-			for (int i = 0; i < approvalStatusList.size(); i++) {
-				ApprovalStatus approvalStatus = approvalStatusList.get(i);
-				System.out.println(String.format("%-5s %-20s", (i + 1), approvalStatus.getStatus()));
-			}
-		}
+        if (approvalStatusList.isEmpty()) {
+            System.out.println("No approval statuses found.");
+        } else {
+            System.out.println("Approval Statuses:");
+            System.out.println(String.format("%-5s %-20s", "ID", "Status Name"));
+            System.out.println("---------------------------");
+            for (int i = 0; i < approvalStatusList.size(); i++) {
+                ApprovalStatus approvalStatus = approvalStatusList.get(i);
+                System.out.println(String.format("%-5s %-20s", (i + 1), approvalStatus.getStatus()));
+            }
+        }
         // Reset System.out to its original value
         System.setOut(originalOut);
 
@@ -502,35 +534,36 @@ public void testViewActivitiesNonEmpty() {
 
         assertEquals(expectedOutput, outContent.toString());
     }
+
     @Test
-public void testDeleteAttendance() {
-    ArrayList<Users> userList = new ArrayList<>();
-    ArrayList<TimeSlot> timeSlotList = new ArrayList<>();
-    ArrayList<Activity> activityList = new ArrayList<>(); // Populate this list with actual activities
+    public void testDeleteAttendance() {
+        ArrayList<Users> userList = new ArrayList<>();
+        ArrayList<TimeSlot> timeSlotList = new ArrayList<>();
+        ArrayList<Activity> activityList = new ArrayList<>(); // Populate this list with actual activities
 
-    activityList.add(new Activity("Swimming", 20, "Swimming goggles"));
-    userList.add(new Users("Jane Smith", "98765", "T_jane_smith", "T"));
-    timeSlotList.add(new TimeSlot(new Date(), new Date(), activityList.get(0)));
-    ArrayList<Attendance> attendanceList = new ArrayList<>();
-    attendanceList.add(new Attendance(userList.get(0), timeSlotList.get(0), new Date()));
+        activityList.add(new Activity("Swimming", 20, "Swimming goggles"));
+        userList.add(new Users("Jane Smith", "98765", "T_jane_smith", "T"));
+        timeSlotList.add(new TimeSlot(new Date(), new Date(), activityList.get(0)));
+        ArrayList<Attendance> attendanceList = new ArrayList<>();
+        attendanceList.add(new Attendance(userList.get(0), timeSlotList.get(0), new Date()));
 
-    int IdToDelete = 1;
-    ByteArrayOutputStream output = new ByteArrayOutputStream();
-    System.setOut(new PrintStream(output));
+        int IdToDelete = 1;
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(output));
 
-    // Check if the entered ID is valid
-		if (IdToDelete <= 0 || IdToDelete > attendanceList.size()) {
-			System.out.println("Invalid attendance record ID.");
-			return;
-		}
+        // Check if the entered ID is valid
+        if (IdToDelete <= 0 || IdToDelete > attendanceList.size()) {
+            System.out.println("Invalid attendance record ID.");
+            return;
+        }
 
-		// Remove the attendance record from the list and inform the user
-		attendanceList.remove(IdToDelete - 1);
-		System.out.println("Attendance record with ID " + IdToDelete + " has been deleted.");
+        // Remove the attendance record from the list and inform the user
+        attendanceList.remove(IdToDelete - 1);
+        System.out.println("Attendance record with ID " + IdToDelete + " has been deleted.");
 
-    String expected = "Attendance record with ID 1 has been deleted.";
-    assertEquals(expected, output.toString().trim());
-}
+        String expected = "Attendance record with ID 1 has been deleted.";
+        assertEquals(expected, output.toString().trim());
+    }
 
     @Test
     public void testDeleteApprovalStatus() {
@@ -549,37 +582,37 @@ public void testDeleteAttendance() {
         // Call the deleteApprovalStatus() method
         // testDeleteApprovalStatus();
         System.out.println("------------------------");
-		System.out.println("Delete Approval Status");
-		System.out.println("------------------------");
+        System.out.println("Delete Approval Status");
+        System.out.println("------------------------");
 
-		// Check if there are any approval statuses to delete
-		if (approvalStatusList.isEmpty()) {
-			System.out.println("No approval statuses found.");
-			return;
-		}
+        // Check if there are any approval statuses to delete
+        if (approvalStatusList.isEmpty()) {
+            System.out.println("No approval statuses found.");
+            return;
+        }
 
-		// Display all approval statuses with their IDs
-		System.out.println("All Approval Statuses:");
-		System.out.println(String.format("%-5s %-10s", "ID", "Status"));
-		System.out.println("---------------------------");
-		for (int i = 0; i < approvalStatusList.size(); i++) {
-			ApprovalStatus status = approvalStatusList.get(i);
-			System.out.println(String.format("%-5s %-10s", (i + 1), status.getStatus()));
-		}
+        // Display all approval statuses with their IDs
+        System.out.println("All Approval Statuses:");
+        System.out.println(String.format("%-5s %-10s", "ID", "Status"));
+        System.out.println("---------------------------");
+        for (int i = 0; i < approvalStatusList.size(); i++) {
+            ApprovalStatus status = approvalStatusList.get(i);
+            System.out.println(String.format("%-5s %-10s", (i + 1), status.getStatus()));
+        }
 
-		// Prompt the user to enter the ID of the approval status they want to delete
-		int approvalStatusIdToDelete = input;
+        // Prompt the user to enter the ID of the approval status they want to delete
+        int approvalStatusIdToDelete = input;
 
-		// Check if the entered ID is valid
-		if (approvalStatusIdToDelete <= 0 || approvalStatusIdToDelete > approvalStatusList.size()) {
-			System.out.println("Invalid approval status ID.");
-			return;
-		}
+        // Check if the entered ID is valid
+        if (approvalStatusIdToDelete <= 0 || approvalStatusIdToDelete > approvalStatusList.size()) {
+            System.out.println("Invalid approval status ID.");
+            return;
+        }
 
-		// Remove the approval status from the list and inform the user
-		ApprovalStatus deletedStatus = approvalStatusList.remove(approvalStatusIdToDelete - 1);
-		System.out
-				.println("Approval status with ID " + approvalStatusIdToDelete + " has been deleted: " + deletedStatus);
+        // Remove the approval status from the list and inform the user
+        ApprovalStatus deletedStatus = approvalStatusList.remove(approvalStatusIdToDelete - 1);
+        System.out
+                .println("Approval status with ID " + approvalStatusIdToDelete + " has been deleted: " + deletedStatus);
         // Reset System.out and user input to their original values
         System.setOut(originalOut);
         Helper.resetTestingInput();

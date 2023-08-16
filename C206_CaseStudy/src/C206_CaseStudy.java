@@ -830,7 +830,7 @@ public class C206_CaseStudy {
 		return null; // Return null if the activity with the specified ID is not found
 	}
 
-	private static void updateRegistrationStatus() {
+	public static void updateRegistrationStatus() {
 		System.out.println("------------------------");
 		System.out.println("Update Registration Status");
 		System.out.println("------------------------");

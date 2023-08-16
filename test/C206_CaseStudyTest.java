@@ -1,4 +1,6 @@
 import static org.junit.Assert.*;
+import java.util.Date;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -209,4 +211,18 @@ public class C206_CaseStudyTest {
 		// Test deleteApprovalStatus() method
 		// Implement the test for deleteApprovalStatus() method here
 	}
+	
+	@Test
+    public void testAddTimeSlot() {
+        Activity activity = new Activity("Test Activity", 10, "Test Prerequisites");
+        Date startTime = new Date();
+        Date endTime = new Date(startTime.getTime() + 3600000); // Adding 1 hour
+
+        TimeSlot timeSlot = new TimeSlot(startTime, endTime, activity);
+
+        assertEquals(startTime, timeSlot.getStartTime());
+        assertEquals(endTime, timeSlot.getEndTime());
+        assertEquals(activity, timeSlot.getActivity());
+    }
+	
 }

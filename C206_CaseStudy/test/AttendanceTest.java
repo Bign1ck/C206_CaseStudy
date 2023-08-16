@@ -102,6 +102,22 @@ public class AttendanceTest extends C206_CaseStudy{
 }
 
 @Test
+public void testViewAttendanceEmpty() {
+    // Redirect System.out to capture output
+    System.setOut(new PrintStream(outContent));
+
+    // Call the viewAttendance method
+    viewAttendance();
+
+    // Verify the expected output
+    assertEquals("------------------------" + System.lineSeparator() +
+            "View All Attendance" + System.lineSeparator() +
+            "------------------------" + System.lineSeparator() +
+            "No attendance records found." + System.lineSeparator(), outContent.toString());
+}
+
+
+@Test
 public void testDeleteAttendance() {
     ArrayList<Users> userList = new ArrayList<>();
     ArrayList<TimeSlot> timeSlotList = new ArrayList<>();
@@ -129,8 +145,6 @@ public void testDeleteAttendance() {
 
     String expected = "Attendance record with ID 1 has been deleted.";
     assertEquals(expected, output.toString().trim());
-}
-
-
+	}
 }
     

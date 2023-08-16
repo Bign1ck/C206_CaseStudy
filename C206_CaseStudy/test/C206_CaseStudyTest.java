@@ -31,6 +31,8 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
         approvalStatusList = new ArrayList<>();
 
         userList.add(new Users("John Doe", "12345", "S_john_doe", "S"));
+        userList.add(new Users("Jane Smith", "98765", "T_jane_smith", "T"));
+        userList.add(new Users("Alice Brown", "11111", "S_alice_brown", "S"));
         activityList.add(new Activity("Swimming", 20, "Swimming goggles"));
 
         Users user2 = new Users("Jane Smith", "789012", "T_jane_smith", "T");
@@ -109,7 +111,10 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
     // ------------------------------------------------------------------------------------------------------------------------
     // ------------------------------------------------------------------------------------------------------------------------
     // ------------------------------------------------------------------------------------------------------------------------
-
+// do testDeleteUserBOUNDARY
+    
+    // do testViewUsersERROR
+    
     @Test
     public void testAddActivity() {
         String activityName = "Test Activity";

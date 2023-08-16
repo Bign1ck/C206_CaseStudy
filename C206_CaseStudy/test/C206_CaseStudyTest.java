@@ -639,4 +639,18 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
         assertEquals(1, approvalStatusList.size());
         assertEquals("Approved", approvalStatusList.get(0).getStatus());
     }
+    
+    @Test
+    public void testAddTimeSlot() {
+        Activity activity = new Activity("Test Activity", 10, "Test Prerequisites");
+        Date startTime = new Date();
+        Date endTime = new Date(startTime.getTime() + 3600000); // Adding 1 hour
+
+        TimeSlot timeSlot = new TimeSlot(startTime, endTime, activity);
+
+        assertEquals(startTime, timeSlot.getStartTime());
+        assertEquals(endTime, timeSlot.getEndTime());
+        assertEquals(activity, timeSlot.getActivity());
+    }
+
 }

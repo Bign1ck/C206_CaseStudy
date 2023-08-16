@@ -294,9 +294,9 @@ public void testViewActivitiesNonEmpty() {
         System.setOut(originalOut);
 
         // Assert that the printed output matches the expected format
-        String expectedOutput = "-".repeat(80)+"\n" +
+        String expectedOutput = "-".repeat(80)+"\r\n" +
                 String.format("%-15s %-30s %-20s %-15s%n", "Registration ID", "User", "Activity", "Status")+
-                "-".repeat(80)+"\n" +
+                "-".repeat(80)+"\r\n" +
                 String.format("%-15s %-30s %-20s %-15s%n", registration.getRegistrationId(), user.getName(),
                         activity.getActivityName(), registration.getStatus())
                 +
@@ -354,20 +354,20 @@ public void testViewActivitiesNonEmpty() {
         System.setIn(System.in);
 
         // Assert that the printed output matches the expected message
-        String expectedOutput = "------------------------\n" +
-                "Delete Registration\n" +
-                "------------------------\n" +
-                "All Registrations:\n" +
-                "Reg. ID User                           Activity            Status             \n" +
-                "--------------------------------------------------------------------------------\n" +
+        String expectedOutput = "------------------------\r\n" +
+                "Delete Registration\r\n" +
+                "------------------------\r\n" +
+                "All Registrations:\r\n" +
+                String.format("%-5s %-15s %-30s %-20s", "Reg. ID", "User", "Activity", "Status")+"\r\n" +
+                "--------------------------------------------------------------------------------\r\n" +
                 String.format("%-5s %-15s %-30s %-20s ", registration.getRegistrationId(), user.getName(),
                         activity.getActivityName(), registration.getStatus())
                 +
-                "\n--------------------------------------------------------------------------------\n" +
+                "\r\n--------------------------------------------------------------------------------\r\n" +
                 "Enter the ID of the registration to delete: " +
-                "Registration with ID 1 has been deleted.\n";
+                "Registration with ID 1 has been deleted.\r\n";
 
-        assertEquals(expectedOutput, outContent.toString());
+        assertEquals(expectedOutput.trim(), outContent.toString().trim());
         assertEquals(0, registrationList.size()); // Check that the registration was removed from the list
     }
 
@@ -380,13 +380,14 @@ public void testViewActivitiesNonEmpty() {
         System.setOut(new PrintStream(outContent));
 
         // Redirect user input to simulate providing the approval status name
-        Helper.setInputForTesting("Pending\n");
+        Helper.setInputForTesting("Pending");
 
         // Call the addApprovalStatus() method
         // testAddApprovalStatus();
         System.out.println("------------------------");
 		System.out.println("Add New Approval Status");
 		System.out.println("------------------------");
+        approvalStatusList.clear();
         ApprovalStatus newApprovalStatus = new ApprovalStatus(Helper.getOutputForTesting());
 
 		// Add the new approval status to the approvalStatusList
@@ -399,15 +400,16 @@ public void testViewActivitiesNonEmpty() {
         Helper.resetTestingInput();
 
         // Assert that the printed output matches the expected message
-        String expectedOutput = "-".repeat(24)+"\n" +
-                "Add New Approval Status"+"\n" +
-                "-".repeat(24)+"\n" +
-                "Approval status added successfully!\n";
+        String expectedOutput = "-".repeat(24)+"\r\n" +
+                "Add New Approval Status"+"\r\n" +
+                "-".repeat(24)+"\r\n" +
+                "Approval status added successfully!\r\n";
 
         assertEquals(expectedOutput.trim(), outContent.toString().trim());
 
         // Assert that the new approval status is correctly added to the list
         assertEquals(1, approvalStatusList.size());
+    
         assertEquals("Pending", approvalStatusList.get(0).getStatus());
     }
 

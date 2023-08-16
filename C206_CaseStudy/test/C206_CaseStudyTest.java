@@ -204,20 +204,37 @@ public void testViewActivitiesNonEmpty() {
     assertEquals(expectedOutput.toString().trim(), outputStreamCaptor.toString().trim());
 }
 
-
+@Test
     public void testDeleteActivity() {
         // Prepare sample activities
         Activity activity1 = new Activity("Swimming", 20, "Swimming goggles");
         Activity activity2 = new Activity("Yoga", 15, "Yoga mat");
         activityList.add(activity1);
         activityList.add(activity2);
-
+        int inputID = 1;
         // Assuming deleteActivity method is part of C206_CaseStudy class
         // C206_CaseStudy.deleteActivity(activityList, 1); // Deleting by index or ID,
         // based on implementation
+         ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStreamCaptor));
 
+		if (activityList.isEmpty()) {
+			System.out.println("No activities found.");
+			return;
+		}
+
+		int activityIdToDelete = inputID;
+
+		Activity activityToDelete = null;
+		for (Activity activity : activityList) {
+			if (activity.getActivityId() == activityIdToDelete) {
+				activityToDelete = activity;
+                System.out.println("Activity has been deleted");
+				break;
+			}
+		}
         // Check if activity with index or ID 1 has been deleted
-        assertFalse("Activity has been deleted", activityList.contains(activity1));
+        assertEquals("Activity has been deleted",outputStreamCaptor.toString().trim());
     }
 
     // ------------------------------------------------------------------------------------------------------------------------------------

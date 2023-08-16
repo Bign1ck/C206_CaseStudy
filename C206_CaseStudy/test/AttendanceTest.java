@@ -117,6 +117,21 @@ public void testViewAttendanceEmpty() {
     assertEquals(expected, outContent.toString());
 }
 
+@Test
+public void testViewAttendanceNonEmpty() {
+    // Redirect System.out to capture output
+    System.setOut(new PrintStream(outContent));
+
+    // Call the viewAttendance method
+    viewAttendance();
+
+    String expected = "------------------------" + System.lineSeparator() +
+            "View All Attendance" + System.lineSeparator() +
+            "------------------------" + System.lineSeparator() +
+            "No attendance records found." + System.lineSeparator();
+    // Verify the expected output
+    assertEquals(expected, outContent.toString());
+}
 
 @Test
 public void testDeleteAttendance() {

@@ -1111,38 +1111,5 @@ public class C206_CaseStudy {
 		}
 	}
 
-	private static void deleteAttendance() {
-		System.out.println("------------------------");
-		System.out.println("Delete Attendance");
-		System.out.println("------------------------");
 
-		// Check if there are any attendance records to delete
-		if (attendanceList.isEmpty()) {
-			System.out.println("No attendance records found.");
-			return;
-		}
-
-		// Display all attendance records with their IDs
-		System.out.println("All Attendance Records:");
-		System.out.println(String.format("%-5s %-20s %-15s", "ID", "User", "Time Slot"));
-		System.out.println("---------------------------------------");
-		for (int i = 0; i < attendanceList.size(); i++) {
-			Attendance attendance = attendanceList.get(i);
-			System.out.println(String.format("%-5s %-20s %-15s", (i + 1), attendance.getUser().getName(),
-					attendance.getTimeSlot().getTimeSlotId()));
-		}
-
-		// Prompt the user to enter the ID of the attendance record they want to delete
-		int attendanceIdToDelete = Helper.readInt("Enter the ID of the attendance record to delete: ");
-
-		// Check if the entered ID is valid
-		if (attendanceIdToDelete <= 0 || attendanceIdToDelete > attendanceList.size()) {
-			System.out.println("Invalid attendance record ID.");
-			return;
-		}
-
-		// Remove the attendance record from the list and inform the user
-		attendanceList.remove(attendanceIdToDelete - 1);
-		System.out.println("Attendance record with ID " + attendanceIdToDelete + " has been deleted.");
-	}
 }

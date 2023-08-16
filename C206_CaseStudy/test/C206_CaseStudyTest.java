@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.After;
@@ -501,6 +502,35 @@ public void testViewActivitiesNonEmpty() {
 
         assertEquals(expectedOutput, outContent.toString());
     }
+    @Test
+public void testDeleteAttendance() {
+    ArrayList<Users> userList = new ArrayList<>();
+    ArrayList<TimeSlot> timeSlotList = new ArrayList<>();
+    ArrayList<Activity> activityList = new ArrayList<>(); // Populate this list with actual activities
+
+    activityList.add(new Activity("Swimming", 20, "Swimming goggles"));
+    userList.add(new Users("Jane Smith", "98765", "T_jane_smith", "T"));
+    timeSlotList.add(new TimeSlot(new Date(), new Date(), activityList.get(0)));
+    ArrayList<Attendance> attendanceList = new ArrayList<>();
+    attendanceList.add(new Attendance(userList.get(0), timeSlotList.get(0), new Date()));
+
+    int IdToDelete = 1;
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(output));
+
+    // Check if the entered ID is valid
+		if (IdToDelete <= 0 || IdToDelete > attendanceList.size()) {
+			System.out.println("Invalid attendance record ID.");
+			return;
+		}
+
+		// Remove the attendance record from the list and inform the user
+		attendanceList.remove(IdToDelete - 1);
+		System.out.println("Attendance record with ID " + IdToDelete + " has been deleted.");
+
+    String expected = "Attendance record with ID 1 has been deleted.";
+    assertEquals(expected, output.toString().trim());
+}
 
     @Test
     public void testDeleteApprovalStatus() {

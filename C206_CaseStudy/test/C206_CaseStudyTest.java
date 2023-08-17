@@ -137,6 +137,67 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
                 "No users found." + System.lineSeparator() +
                 "-".repeat(80) + System.lineSeparator(), outContent.toString());
     }
+    
+    @Test
+    public void testViewUsersBoundary() {
+        // Populate the user list with multiple users using the correct constructor
+        userList.add(new Users("John Doe", "123456", "S_john_doe", "S"));
+        userList.add(new Users("Alice Smith", "987654", "T_alice_smith", "T"));
+        
+        // Redirect System.out to capture output
+        System.setOut(new PrintStream(outContent));
+
+        // Call the viewUsers method
+        viewUsers();
+
+        // Reset System.out to its original state
+        System.setOut(originalOut);
+
+        // Verify the expected output
+        String expectedOutput = "-".repeat(80) + System.lineSeparator() +
+                "USERS LIST" + System.lineSeparator() +
+                "-".repeat(80) + System.lineSeparator() +
+                "User 1:" + System.lineSeparator() +
+                "Name: John Doe" + System.lineSeparator() +
+                "Student ID: 123456" + System.lineSeparator() +
+                "Username: S_john_doe" + System.lineSeparator() +
+                "Role: S" + System.lineSeparator() +
+                "-".repeat(80) + System.lineSeparator() +
+                "User 2:" + System.lineSeparator() +
+                "Name: Alice Smith" + System.lineSeparator() +
+                "Student ID: 987654" + System.lineSeparator() +
+                "Username: T_alice_smith" + System.lineSeparator() +
+                "Role: T" + System.lineSeparator() +
+                "-".repeat(80) + System.lineSeparator();
+        
+        assertEquals(expectedOutput, outContent.toString());
+    }
+    
+    @Test
+    public void testViewUsersError() {
+        // Simulate an error condition by setting userList to null
+        userList = null;
+
+        // Redirect System.out to capture output
+        System.setOut(new PrintStream(outContent));
+
+        // Call the viewUsers method with a null userList
+        viewUsers();
+
+        // Reset System.out to its original state
+        System.setOut(originalOut);
+
+        // Verify the expected output
+        String expectedOutput = "-".repeat(80) + System.lineSeparator() +
+                "USERS LIST" + System.lineSeparator() +
+                "-".repeat(80) + System.lineSeparator() +
+                "An error occurred while trying to retrieve user data." + System.lineSeparator() +
+                "-".repeat(80) + System.lineSeparator();
+
+        assertEquals(expectedOutput, outContent.toString());
+    }
+
+
 
     @Test
     public void testDeleteUser() {
@@ -159,6 +220,49 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
         }
         assertFalse("user has been deleted", deleted);
     }
+    
+    
+    @Test
+    public void testDeleteUserBoundary() {
+        // Create a user to be deleted
+        Users userToDelete = new Users("John Doe", "12345", "S_john_doe", "S");
+        userList.add(userToDelete);
+
+        // Redirect System.out to capture output
+        System.setOut(new PrintStream(outContent));
+
+        // Call the deleteUser method
+        deleteUser();
+
+        // Reset System.out to its original state
+        System.setOut(originalOut);
+
+        // Verify the expected output
+        String expectedOutput = "User deleted successfully!" + System.lineSeparator();
+        assertEquals(expectedOutput, outContent.toString());
+
+        // Verify that the user has been deleted from the userList
+        assertFalse("User has been deleted", userList.contains(userToDelete));
+    }
+    
+    @Test
+    public void testDeleteUserError() {
+        // Redirect System.out to capture output
+        System.setOut(new PrintStream(outContent));
+
+        // Call the deleteUser method for a user that doesn't exist
+        deleteUser();
+
+        // Reset System.out to its original state
+        System.setOut(originalOut);
+
+        // Verify the expected output
+        String expectedOutput = "User with the given student ID not found." + System.lineSeparator();
+        assertEquals(expectedOutput, outContent.toString());
+    }
+
+
+
 
     // ------------------------------------------------------------------------------------------------------------------------
     // ------------------------------------------------------------------------------------------------------------------------

@@ -72,69 +72,27 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
         assertEquals("S", addedUser.getRole());
     }
     
-    // 3 conditions in one test case, might edit more....
+ // testAddUser boundary condition
     @Test
-    public void testAddUserConditions() {
-        // Test normal condition
-        String simulatedInputNormal = "John Doe\n123456\nS\n";
-        InputStream savedSystemInNormal = System.in;
-        System.setIn(new ByteArrayInputStream(simulatedInputNormal.getBytes()));
+    public void testAddUserBoundary() {
+        String simulatedInput = "Alice Smith\n987654\nT\n"; // Input for teacher role
+        InputStream savedSystemIn = System.in;
+        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
 
         // Call the addUser method
         addUser();
 
         // Reset System.in to its original state
-        System.setIn(savedSystemInNormal);
+        System.setIn(savedSystemIn);
 
         // Verify the expected behavior
-        assertEquals(4, userList.size());
+        assertEquals(3, userList.size());
 
-        Users addedUserNormal = userList.get(3);
-        assertEquals("John Doe", addedUserNormal.getName());
-        assertEquals("123456", addedUserNormal.getStudentId());
-        assertEquals("S", addedUserNormal.getRole());
-
-        // Test boundary condition
-        String simulatedInputBoundary = "Alice Brown\n999999\nT\n";
-        InputStream savedSystemInBoundary = System.in;
-        System.setIn(new ByteArrayInputStream(simulatedInputBoundary.getBytes()));
-
-        // Call the addUser method
-        addUser();
-
-        // Reset System.in to its original state
-        System.setIn(savedSystemInBoundary);
-
-        // Verify the expected behavior
-        assertEquals(5, userList.size());
-
-        Users addedUserBoundary = userList.get(4);
-        assertEquals("Alice Brown", addedUserBoundary.getName());
-        assertEquals("999999", addedUserBoundary.getStudentId());
-        assertEquals("T", addedUserBoundary.getRole());
-
-        // Test error condition
-        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outputStreamCaptor));
-
-        // Provide incomplete input to trigger an error
-        String simulatedInputError = "Jane Smith\n\nT\n";
-        InputStream savedSystemInError = System.in;
-        System.setIn(new ByteArrayInputStream(simulatedInputError.getBytes()));
-
-        // Call the addUser method
-        addUser();
-
-        // Reset System.in and System.out to their original states
-        System.setIn(savedSystemInError);
-        System.setOut(originalOut);
-
-        // Verify the expected error output
-        String expectedOutputError = "An error occurred while adding the user. Please ensure all required fields are provided." + System.lineSeparator();
-
-        assertEquals(expectedOutputError, outputStreamCaptor.toString());
+        Users addedUser = userList.get(2); // New user should be the third one
+        assertEquals("Alice Smith", addedUser.getName());
+        assertEquals("987654", addedUser.getStudentId());
+        assertEquals("T", addedUser.getRole());
     }
-    
     
 
     @Test

@@ -75,7 +75,8 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
  // testAddUser boundary condition
     @Test
     public void testAddUserBoundary() {
-        String simulatedInput = "Alice Smith\n987654\nT\n"; // Input for teacher role
+        String simulatedInput = "Alice Smith\n987654\nT\n"; 
+        // Input for teacher role
         InputStream savedSystemIn = System.in;
         System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
 
@@ -88,10 +89,36 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
         // Verify the expected behavior
         assertEquals(3, userList.size());
 
-        Users addedUser = userList.get(2); // New user should be the third one
+        Users addedUser = userList.get(2); 
+        // New user should be the third one
         assertEquals("Alice Smith", addedUser.getName());
         assertEquals("987654", addedUser.getStudentId());
         assertEquals("T", addedUser.getRole());
+    }
+    
+ // testAddUser error condition
+    @Test
+    public void testAddUserError() {
+        String simulatedInput = "Invalid Input\n"; 
+        // Invalid input that doesn't match expected format
+        InputStream savedSystemIn = System.in;
+        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+
+        // Call the addUser method
+        addUser();
+
+        // Reset System.in to its original state
+        System.setIn(savedSystemIn);
+
+        // Verify the expected behavior
+        assertEquals(3, userList.size()); // The user list should remain unchanged
+
+        // Ensure that no new user was added
+        Users lastUser = userList.get(2); 
+        // The last user before this test
+        assertNull(lastUser.getName());
+        assertNull(lastUser.getStudentId());
+        assertNull(lastUser.getRole());
     }
     
 

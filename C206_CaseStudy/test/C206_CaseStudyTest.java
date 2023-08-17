@@ -1,6 +1,5 @@
 import static org.junit.Assert.*;
 
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -71,11 +70,11 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
         assertEquals("123456", addedUser.getStudentId());
         assertEquals("S", addedUser.getRole());
     }
-    
- // testAddUser boundary condition
+
+    // testAddUser boundary condition
     @Test
     public void testAddUserBoundary() {
-        String simulatedInput = "Alice Smith\n987654\nT\n"; 
+        String simulatedInput = "Alice Smith\n987654\nT\n";
         // Input for teacher role
         InputStream savedSystemIn = System.in;
         System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
@@ -89,17 +88,17 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
         // Verify the expected behavior
         assertEquals(3, userList.size());
 
-        Users addedUser = userList.get(2); 
+        Users addedUser = userList.get(2);
         // New user should be the third one
         assertEquals("Alice Smith", addedUser.getName());
         assertEquals("987654", addedUser.getStudentId());
         assertEquals("T", addedUser.getRole());
     }
-    
- // testAddUser error condition
+
+    // testAddUser error condition
     @Test
     public void testAddUserError() {
-        String simulatedInput = "Invalid Input\n"; 
+        String simulatedInput = "Invalid Input\n";
         // Invalid input that doesn't match expected format
         InputStream savedSystemIn = System.in;
         System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
@@ -114,13 +113,12 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
         assertEquals(3, userList.size()); // The user list should remain unchanged
 
         // Ensure that no new user was added
-        Users lastUser = userList.get(2); 
+        Users lastUser = userList.get(2);
         // The last user before this test
         assertNull(lastUser.getName());
         assertNull(lastUser.getStudentId());
         assertNull(lastUser.getRole());
     }
-    
 
     @Test
     public void testViewUsersEmpty() {
@@ -137,13 +135,13 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
                 "No users found." + System.lineSeparator() +
                 "-".repeat(80) + System.lineSeparator(), outContent.toString());
     }
-    
+
     @Test
     public void testViewUsersBoundary() {
         // Populate the user list with multiple users using the correct constructor
         userList.add(new Users("John Doe", "123456", "S_john_doe", "S"));
         userList.add(new Users("Alice Smith", "987654", "T_alice_smith", "T"));
-        
+
         // Redirect System.out to capture output
         System.setOut(new PrintStream(outContent));
 
@@ -169,10 +167,10 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
                 "Username: T_alice_smith" + System.lineSeparator() +
                 "Role: T" + System.lineSeparator() +
                 "-".repeat(80) + System.lineSeparator();
-        
+
         assertEquals(expectedOutput, outContent.toString());
     }
-    
+
     @Test
     public void testViewUsersError() {
         // Simulate an error condition by setting userList to null
@@ -197,8 +195,6 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
         assertEquals(expectedOutput, outContent.toString());
     }
 
-
-
     @Test
     public void testDeleteUser() {
         // Test deleteUser() method
@@ -220,8 +216,7 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
         }
         assertFalse("user has been deleted", deleted);
     }
-    
-    
+
     @Test
     public void testDeleteUserBoundary() {
         // Create a user to be deleted
@@ -244,7 +239,7 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
         // Verify that the user has been deleted from the userList
         assertFalse("User has been deleted", userList.contains(userToDelete));
     }
-    
+
     @Test
     public void testDeleteUserError() {
         // Create a user that does not exist in the userList
@@ -267,16 +262,18 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
         assertFalse("Nonexistent user has not been deleted", userList.contains(nonExistentUser));
     }
 
+<<<<<<< HEAD
     
     
 
 
 
+=======
+>>>>>>> c7c2d1cc7587e99db3248feb08f6a5bf6fd59171
     // ------------------------------------------------------------------------------------------------------------------------
     // ------------------------------------------------------------------------------------------------------------------------
     // ------------------------------------------------------------------------------------------------------------------------
 
-    
     @Test
     public void testAddActivity() {
         String activityName = "Test Activity";
@@ -553,6 +550,32 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
     }
 
     @Test
+    public void testDeleteRegistration_Boundary() {
+        Users user = new Users("John Doe", "123456", null, null);
+        Activity activity = new Activity("Chess Club", 20);
+        Registration registration = new Registration(user, activity, "Pending");
+
+        deleteRegistrationById(registration.getRegistrationId());
+        assertEquals(true, registrationList.isEmpty());
+
+    }
+
+    @Test
+    public void testDeleteRegistration_Error() {
+        Users user = new Users("John Doe", "123456", null, null);
+        Activity activity = new Activity("Chess Club", 20);
+        Registration registration = new Registration(user, activity, "Pending");
+        registrationList.add(registration);
+
+        int nonExistingRegistrationId = 999; // A registration ID that doesn't exist
+
+        // Delete the registration with the non-existing ID
+        C206_CaseStudy.deleteRegistrationById(nonExistingRegistrationId);
+        // In this case, the list should not be modified
+        assertEquals(false, registrationList.isEmpty());
+    }
+
+    @Test
     public void testUpdateRegistrationStatus() {
         // Add sample approval statuses
         approvalStatusList.add(new ApprovalStatus("Pending"));
@@ -587,6 +610,90 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
             assertEquals("Approved", updatedStatus);
         }
     }
+
+    // @Test
+    // public void testUpdateRegistrationStatus_Normal() {
+    // // Set up a mock input stream for user input
+    // String userInput = "1\n1\n";
+    // InputStream mockInput = new ByteArrayInputStream(userInput.getBytes());
+    // System.setIn(mockInput);
+
+    // // Add sample data for testing
+    // Users user = new Users("John Doe", "123456", null, null);
+    // Activity activity = new Activity("Chess Club", 20);
+    // Registration registration = new Registration(user, activity, "Pending");
+    // registrationList.add(registration);
+
+    // // Add at least one approval status to the list
+    // ApprovalStatus approvalStatus = new ApprovalStatus("Approved");
+    // approvalStatusList.add(approvalStatus);
+    // registration.setStatus("Approved");
+
+    // // Call the method
+    // C206_CaseStudy.updateRegistrationStatus();
+
+    // // Assert that the registration status is updated
+    // assertEquals("Approved", registration.getStatus());
+    // }
+
+    @Test
+    public void testUpdateRegistrationStatus_Boundary() {
+        // Set up a mock input stream for user input
+        String userInput = "1\n1\n";
+        InputStream mockInput = new ByteArrayInputStream(userInput.getBytes());
+        System.setIn(mockInput);
+
+        // Add sample data for testing
+        Users user = new Users("John Doe", "123456", null, null);
+        Activity activity = new Activity("Chess Club", 20);
+        Registration registration = new Registration(user, activity, "Pending");
+        registrationList.add(registration);
+
+        // Add at least one approval status to the list
+        ApprovalStatus approvalStatus = new ApprovalStatus("Approved");
+        approvalStatusList.add(approvalStatus);
+
+        // Call the method with minimum valid registration ID
+        C206_CaseStudy.updateRegistrationStatus();
+
+        // Assert that the registration status is unchanged
+        assertEquals("Pending", registration.getStatus());
+
+        // Call the method with maximum valid registration ID
+        String userInputMaxId = (registrationList.size() + 1) + "\n1\n";
+        InputStream mockInputMaxId = new ByteArrayInputStream(userInputMaxId.getBytes());
+        System.setIn(mockInputMaxId);
+
+        C206_CaseStudy.updateRegistrationStatus();
+
+        // Assert that the registration status is unchanged
+        assertEquals("Pending", registration.getStatus());
+    }
+
+    @Test
+    public void testUpdateRegistrationStatus_Error() {
+        // Set up a mock input stream for user input
+        String userInput = "1\n99\n"; // Invalid approval status ID
+        InputStream mockInput = new ByteArrayInputStream(userInput.getBytes());
+        System.setIn(mockInput);
+    
+        // Add sample data for testing
+        Users user = new Users("John Doe", "123456", null, null);
+        Activity activity = new Activity("Chess Club", 20);
+        Registration registration = new Registration(user, activity, "Pending");
+        registrationList.add(registration);
+    
+        // Add at least one approval status to the list
+        ApprovalStatus approvalStatus = new ApprovalStatus("Approved");
+        approvalStatusList.add(approvalStatus);
+    
+        // Call the method
+        C206_CaseStudy.updateRegistrationStatus();
+    
+        // Assert that the registration status remains unchanged
+        assertEquals("Pending", registration.getStatus());
+    }
+    
 
     // -----------------------------------------------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------------------------
@@ -801,7 +908,7 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
         assertEquals(1, approvalStatusList.size());
         assertEquals("Approved", approvalStatusList.get(0).getStatus());
     }
-    
+
     @Test
     public void testAddTimeSlot() {
         Activity activity = new Activity("Test Activity", 10, "Test Prerequisites");

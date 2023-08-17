@@ -16,14 +16,15 @@ public class C206_CaseStudy {
 		ADD_APPROVAL_STATUS(10, "T"),
 		VIEW_APPROVAL_STATUSES(11, "T"),
 		DELETE_APPROVAL_STATUS(12, "T"),
-		UPDATE_APPROVAL_STATUS(12, "T"),
+
 		ADD_TIME_SLOT(13, "T"),
 		VIEW_TIME_SLOTS(14, "T"),
 		DELETE_TIME_SLOT(15, "T"),
 		ADD_ATTENDANCE(16, "T"),
 		VIEW_ATTENDANCE(17, "T"),
 		DELETE_ATTENDANCE(18, "T"),
-		QUIT(19, "Global");
+		UPDATE_REGISTRATION_STATUS(19, "T"),
+		QUIT(20, "Global");
 
 		private final int value;
 		private final String[] allowedRoles;
@@ -88,7 +89,7 @@ public class C206_CaseStudy {
 		ADD_REGISTRATION(4),
 		VIEW_REGISTRATION(5),
 		DELETE_REGISTRATION(6),
-		UPDATE_APPROVAL_STATUS(7),
+		UPDATE_REGISTRATION_STATUS(7),
 		QUIT(8);
 
 		private final int value;
@@ -234,7 +235,7 @@ public class C206_CaseStudy {
 			case DELETE_REGISTRATION:
 				deleteRegistration();
 				break;
-			case UPDATE_APPROVAL_STATUS:
+			case UPDATE_REGISTRATION_STATUS:
 				updateRegistrationStatus();
 				break;
 			case QUIT:
@@ -281,7 +282,7 @@ public class C206_CaseStudy {
 		switch (selectedOption) {
 			case ADD_USER:
 				addUser();
-				
+
 				break;
 			case VIEW_USERS:
 				viewUsers();
@@ -316,8 +317,8 @@ public class C206_CaseStudy {
 			case DELETE_APPROVAL_STATUS:
 				deleteApprovalStatus();
 				break;
-			case UPDATE_APPROVAL_STATUS:
-				deleteApprovalStatus();
+			case UPDATE_REGISTRATION_STATUS:
+				updateRegistrationStatus();
 				break;
 			case ADD_TIME_SLOT:
 				addTimeSlot();
@@ -374,7 +375,8 @@ public class C206_CaseStudy {
 		approvalStatusList.add(new ApprovalStatus("Approved"));
 		approvalStatusList.add(new ApprovalStatus("Rejected"));
 
-		attendanceList.add(new Attendance(userList.get(0), timeSlotList.get(0), new Date(System.currentTimeMillis() - 12 * 60 * 1000)));
+		attendanceList.add(new Attendance(userList.get(0), timeSlotList.get(0),
+				new Date(System.currentTimeMillis() - 12 * 60 * 1000)));
 		attendanceList.add(new Attendance(userList.get(1), timeSlotList.get(1), new Date()));
 		attendanceList.add(new Attendance(userList.get(5), timeSlotList.get(2),
 				new Date(System.currentTimeMillis() + 12 * 60 * 1000)));
@@ -572,7 +574,6 @@ public class C206_CaseStudy {
 		}
 	}
 
-
 	private static void deleteActivity() {
 		System.out.println("-".repeat(24));
 		System.out.println("DELETE ACTIVITY");
@@ -626,7 +627,7 @@ public class C206_CaseStudy {
 		System.out.println("Activity with ID " + activityIdToDelete + " has been deleted.");
 	}
 
-	private static void addRegistration() {
+	public static void addRegistration() {
 		System.out.println("-".repeat(24));
 		System.out.println("ADD NEW REGISTRATION");
 		System.out.println("-".repeat(24));
@@ -709,7 +710,7 @@ public class C206_CaseStudy {
 		System.out.println("--------------------------------------------------------------------------------");
 	}
 
-	private static void deleteRegistration() {
+	public static void deleteRegistration() {
 		System.out.println("------------------------");
 		System.out.println("Delete Registration");
 		System.out.println("------------------------");
@@ -722,33 +723,22 @@ public class C206_CaseStudy {
 			return;
 		}
 
-		// Display all registrations with their IDs
-		System.out.println("All Registrations:");
-		System.out
-				.println(String.format("%-5s %-15s %-30s %-20s", "Reg. ID", "User", "Activity", "Status"));
-		System.out.println("--------------------------------------------------------------------------------");
-		for (int i = 0; i < registrationList.size(); i++) {
-			Registration registration = registrationList.get(i);
-			System.out.println(String.format("%-5s %-15s %-30s %-20s ",
+		viewRegistrations();
 
-					registration.getRegistrationId(),
-					registration.getUser().getName(),
-					registration.getActivity().getActivityName(),
-					registration.getStatus()));
-		}
-		System.out.println("--------------------------------------------------------------------------------");
 		// Prompt the user to enter the ID of the registration they want to delete
 		int registrationIdToDelete = Helper.readInt("Enter the ID of the registration to delete: ");
+		deleteRegistrationById(registrationIdToDelete);
+	}
 
-		// Check if the entered ID is valid
-		if (registrationIdToDelete <= 0 || registrationIdToDelete > registrationList.size()) {
-			System.out.println("Invalid registration ID.");
-			return;
+	public static void deleteRegistrationById(int registrationIdToDelete) {
+		for (Registration registration : registrationList) {
+			if (registration.getRegistrationId() == registrationIdToDelete) {
+				registrationList.remove(registration);
+				System.out.println("Registration with ID " + registrationIdToDelete + " has been deleted.");
+				return; // Exit the loop after deletion
+			}
 		}
-
-		// Remove the registration from the list and inform the user
-		registrationList.remove(registrationIdToDelete - 1);
-		System.out.println("Registration with ID " + registrationIdToDelete + " has been deleted.");
+		System.out.println("Registration with ID " + registrationIdToDelete + " not found.");
 	}
 
 	private static void addApprovalStatus() {
@@ -835,60 +825,65 @@ public class C206_CaseStudy {
 		System.out.println("Update Registration Status");
 		System.out.println("------------------------");
 
-		// Check if there are any registrations to update
 		if (registrationList.isEmpty()) {
 			System.out.println("No registrations found.");
 			return;
 		}
 
-		// Display all registrations with their IDs
-		System.out.println("All Registrations:");
-		System.out.println(String.format("%-5s %-15s %-30s %-20s", "Reg. ID", "User", "Activity", "Status"));
-		System.out.println("--------------------------------------------------------------------------------");
-		for (int i = 0; i < registrationList.size(); i++) {
-			Registration registration = registrationList.get(i);
-			System.out.println(String.format("%-5s %-15s %-30s %-20s ",
-					registration.getRegistrationId(),
-					registration.getUser().getName(),
-					registration.getActivity().getActivityName(),
-					registration.getStatus()));
-		}
-		System.out.println("--------------------------------------------------------------------------------");
+		viewRegistrations();
 
-		// Prompt the user to enter the ID of the registration they want to update
-		int registrationIdToUpdate = Helper.readInt("Enter the ID of the registration to update: ");
+		int registrationIdToUpdate = promptForValidRegistrationId();
 
-		// Check if the entered ID is valid
-		if (registrationIdToUpdate <= 0 || registrationIdToUpdate > registrationList.size()) {
+		Registration selectedRegistration = getRegistrationById(registrationIdToUpdate);
+
+		if (selectedRegistration == null) {
 			System.out.println("Invalid registration ID.");
 			return;
 		}
 
-		// Find the registration with the entered ID
-		Registration selectedRegistration = registrationList.get(registrationIdToUpdate - 1);
+		viewApprovalStatuses();
 
-		// Display available approval statuses
-		System.out.println("Available Approval Statuses:");
-		for (int i = 0; i < approvalStatusList.size(); i++) {
-			ApprovalStatus approvalStatus = approvalStatusList.get(i);
-			System.out.println(String.format("%-5s %-20s", (i + 1), approvalStatus.getStatus()));
+		int selectedApprovalStatusId = promptForValidApprovalStatusId();
+
+		updateApprovalStatus(selectedRegistration, selectedApprovalStatusId);
+	}
+
+	private static int promptForValidRegistrationId() {
+		int registrationIdToUpdate;
+
+		do {
+			registrationIdToUpdate = Helper.readInt("Enter the ID of the registration to update: ");
+		} while (registrationIdToUpdate <= 0 || registrationIdToUpdate > registrationList.size());
+
+		return registrationIdToUpdate;
+	}
+
+	private static int promptForValidApprovalStatusId() {
+		int selectedApprovalStatusId;
+
+		do {
+			selectedApprovalStatusId = Helper.readInt("Enter the ID of the approval status to set: ");
+		} while (selectedApprovalStatusId <= 0 || selectedApprovalStatusId > approvalStatusList.size());
+
+		return selectedApprovalStatusId;
+	}
+
+	public static Registration getRegistrationById(int registrationId) {
+		for (Registration registration : registrationList) {
+			if (registration.getRegistrationId() == registrationId) {
+				return registration;
+			}
 		}
+		return null;
+	}
 
-		// Prompt the user to select an approval status
-		int selectedApprovalStatusId = Helper.readInt("Enter the ID of the approval status to set: ");
-
-		// Check if the entered ID is valid
-		if (selectedApprovalStatusId <= 0 || selectedApprovalStatusId > approvalStatusList.size()) {
-			System.out.println("Invalid approval status ID.");
-			return;
-		}
-
-		// Update the registration's approval status
-		selectedRegistration.setStatus(approvalStatusList.get(selectedApprovalStatusId - 1).getStatus());
+	public static void updateApprovalStatus(Registration registration, int approvalStatusId) {
+		String newStatus = approvalStatusList.get(approvalStatusId - 1).getStatus();
+		registration.setStatus(newStatus);
 		System.out.println("Registration status updated successfully!");
 
-		if (selectedRegistration.getStatus().equalsIgnoreCase("Approved")) {
-			Activity selectedActivity = selectedRegistration.getActivity();
+		if (newStatus.equalsIgnoreCase("Approved")) {
+			Activity selectedActivity = registration.getActivity();
 			selectedActivity.reduceCapacity();
 			System.out.println("Activity capacity reduced by one.");
 		}
@@ -1084,7 +1079,7 @@ public class C206_CaseStudy {
 		}
 	}
 
-	public static void viewAttendance(Object object) {
+	public static void viewAttendance() {
 		System.out.println("------------------------");
 		System.out.println("View All Attendance");
 		System.out.println("------------------------");

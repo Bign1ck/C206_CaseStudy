@@ -247,20 +247,28 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
     
     @Test
     public void testDeleteUserError() {
+        // Create a user that does not exist in the userList
+        Users nonExistentUser = new Users("Nonexistent User", "99999", "S_nonexistent", "S");
+
         // Redirect System.out to capture output
         System.setOut(new PrintStream(outContent));
 
-        // Call the deleteUser method for a user that doesn't exist
+        // Call the deleteUser method
         deleteUser();
 
         // Reset System.out to its original state
         System.setOut(originalOut);
 
         // Verify the expected output
-        String expectedOutput = "User with the given student ID not found." + System.lineSeparator();
+        String expectedOutput = "User not found. Deletion failed." + System.lineSeparator();
         assertEquals(expectedOutput, outContent.toString());
+
+        // Verify that the nonexistent user is not deleted from the userList
+        assertFalse("Nonexistent user has not been deleted", userList.contains(nonExistentUser));
     }
 
+    
+    
 
 
 

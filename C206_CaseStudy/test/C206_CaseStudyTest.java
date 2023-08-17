@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.security.cert.TrustAnchor;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -543,7 +542,6 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
         Registration registration = new Registration(user, activity, "Pending");
 
         deleteRegistrationById(registration.getRegistrationId());
-
         assertEquals(true, registrationList.isEmpty());
 
     }
@@ -559,7 +557,6 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
 
         // Delete the registration with the non-existing ID
         C206_CaseStudy.deleteRegistrationById(nonExistingRegistrationId);
-
         // In this case, the list should not be modified
         assertEquals(false, registrationList.isEmpty());
     }
@@ -599,6 +596,90 @@ public class C206_CaseStudyTest extends C206_CaseStudy {
             assertEquals("Approved", updatedStatus);
         }
     }
+
+    // @Test
+    // public void testUpdateRegistrationStatus_Normal() {
+    // // Set up a mock input stream for user input
+    // String userInput = "1\n1\n";
+    // InputStream mockInput = new ByteArrayInputStream(userInput.getBytes());
+    // System.setIn(mockInput);
+
+    // // Add sample data for testing
+    // Users user = new Users("John Doe", "123456", null, null);
+    // Activity activity = new Activity("Chess Club", 20);
+    // Registration registration = new Registration(user, activity, "Pending");
+    // registrationList.add(registration);
+
+    // // Add at least one approval status to the list
+    // ApprovalStatus approvalStatus = new ApprovalStatus("Approved");
+    // approvalStatusList.add(approvalStatus);
+    // registration.setStatus("Approved");
+
+    // // Call the method
+    // C206_CaseStudy.updateRegistrationStatus();
+
+    // // Assert that the registration status is updated
+    // assertEquals("Approved", registration.getStatus());
+    // }
+
+    @Test
+    public void testUpdateRegistrationStatus_Boundary() {
+        // Set up a mock input stream for user input
+        String userInput = "1\n1\n";
+        InputStream mockInput = new ByteArrayInputStream(userInput.getBytes());
+        System.setIn(mockInput);
+
+        // Add sample data for testing
+        Users user = new Users("John Doe", "123456", null, null);
+        Activity activity = new Activity("Chess Club", 20);
+        Registration registration = new Registration(user, activity, "Pending");
+        registrationList.add(registration);
+
+        // Add at least one approval status to the list
+        ApprovalStatus approvalStatus = new ApprovalStatus("Approved");
+        approvalStatusList.add(approvalStatus);
+
+        // Call the method with minimum valid registration ID
+        C206_CaseStudy.updateRegistrationStatus();
+
+        // Assert that the registration status is unchanged
+        assertEquals("Pending", registration.getStatus());
+
+        // Call the method with maximum valid registration ID
+        String userInputMaxId = (registrationList.size() + 1) + "\n1\n";
+        InputStream mockInputMaxId = new ByteArrayInputStream(userInputMaxId.getBytes());
+        System.setIn(mockInputMaxId);
+
+        C206_CaseStudy.updateRegistrationStatus();
+
+        // Assert that the registration status is unchanged
+        assertEquals("Pending", registration.getStatus());
+    }
+
+    @Test
+    public void testUpdateRegistrationStatus_Error() {
+        // Set up a mock input stream for user input
+        String userInput = "1\n99\n"; // Invalid approval status ID
+        InputStream mockInput = new ByteArrayInputStream(userInput.getBytes());
+        System.setIn(mockInput);
+    
+        // Add sample data for testing
+        Users user = new Users("John Doe", "123456", null, null);
+        Activity activity = new Activity("Chess Club", 20);
+        Registration registration = new Registration(user, activity, "Pending");
+        registrationList.add(registration);
+    
+        // Add at least one approval status to the list
+        ApprovalStatus approvalStatus = new ApprovalStatus("Approved");
+        approvalStatusList.add(approvalStatus);
+    
+        // Call the method
+        C206_CaseStudy.updateRegistrationStatus();
+    
+        // Assert that the registration status remains unchanged
+        assertEquals("Pending", registration.getStatus());
+    }
+    
 
     // -----------------------------------------------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------------------------

@@ -281,7 +281,7 @@ public class C206_CaseStudy {
 		switch (selectedOption) {
 			case ADD_USER:
 				addUser();
-				
+
 				break;
 			case VIEW_USERS:
 				viewUsers();
@@ -374,7 +374,8 @@ public class C206_CaseStudy {
 		approvalStatusList.add(new ApprovalStatus("Approved"));
 		approvalStatusList.add(new ApprovalStatus("Rejected"));
 
-		attendanceList.add(new Attendance(userList.get(0), timeSlotList.get(0), new Date(System.currentTimeMillis() - 12 * 60 * 1000)));
+		attendanceList.add(new Attendance(userList.get(0), timeSlotList.get(0),
+				new Date(System.currentTimeMillis() - 12 * 60 * 1000)));
 		attendanceList.add(new Attendance(userList.get(1), timeSlotList.get(1), new Date()));
 		attendanceList.add(new Attendance(userList.get(5), timeSlotList.get(2),
 				new Date(System.currentTimeMillis() + 12 * 60 * 1000)));
@@ -572,7 +573,6 @@ public class C206_CaseStudy {
 		}
 	}
 
-
 	private static void deleteActivity() {
 		System.out.println("-".repeat(24));
 		System.out.println("DELETE ACTIVITY");
@@ -626,7 +626,7 @@ public class C206_CaseStudy {
 		System.out.println("Activity with ID " + activityIdToDelete + " has been deleted.");
 	}
 
-	private static void addRegistration() {
+	public static void addRegistration() {
 		System.out.println("-".repeat(24));
 		System.out.println("ADD NEW REGISTRATION");
 		System.out.println("-".repeat(24));
@@ -709,7 +709,7 @@ public class C206_CaseStudy {
 		System.out.println("--------------------------------------------------------------------------------");
 	}
 
-	private static void deleteRegistration() {
+	public static void deleteRegistration() {
 		System.out.println("------------------------");
 		System.out.println("Delete Registration");
 		System.out.println("------------------------");
@@ -722,33 +722,22 @@ public class C206_CaseStudy {
 			return;
 		}
 
-		// Display all registrations with their IDs
-		System.out.println("All Registrations:");
-		System.out
-				.println(String.format("%-5s %-15s %-30s %-20s", "Reg. ID", "User", "Activity", "Status"));
-		System.out.println("--------------------------------------------------------------------------------");
-		for (int i = 0; i < registrationList.size(); i++) {
-			Registration registration = registrationList.get(i);
-			System.out.println(String.format("%-5s %-15s %-30s %-20s ",
+		viewRegistrations();
 
-					registration.getRegistrationId(),
-					registration.getUser().getName(),
-					registration.getActivity().getActivityName(),
-					registration.getStatus()));
-		}
-		System.out.println("--------------------------------------------------------------------------------");
 		// Prompt the user to enter the ID of the registration they want to delete
 		int registrationIdToDelete = Helper.readInt("Enter the ID of the registration to delete: ");
+		deleteRegistrationById(registrationIdToDelete);
+	}
 
-		// Check if the entered ID is valid
-		if (registrationIdToDelete <= 0 || registrationIdToDelete > registrationList.size()) {
-			System.out.println("Invalid registration ID.");
-			return;
+	public static void deleteRegistrationById(int registrationIdToDelete) {
+		for (Registration registration : registrationList) {
+			if (registration.getRegistrationId() == registrationIdToDelete) {
+				registrationList.remove(registration);
+				System.out.println("Registration with ID " + registrationIdToDelete + " has been deleted.");
+				return; // Exit the loop after deletion
+			}
 		}
-
-		// Remove the registration from the list and inform the user
-		registrationList.remove(registrationIdToDelete - 1);
-		System.out.println("Registration with ID " + registrationIdToDelete + " has been deleted.");
+		System.out.println("Registration with ID " + registrationIdToDelete + " not found.");
 	}
 
 	private static void addApprovalStatus() {
@@ -1084,7 +1073,7 @@ public class C206_CaseStudy {
 		}
 	}
 
-	public static void viewAttendance(Object object) {
+	public static void viewAttendance() {
 		System.out.println("------------------------");
 		System.out.println("View All Attendance");
 		System.out.println("------------------------");
